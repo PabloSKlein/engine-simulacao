@@ -1,6 +1,10 @@
 package com.unisinos.gb.enginesimulacao.model;
 
+import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
+
 import java.util.List;
+
+import static com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum.FIFO;
 
 public class Scheduler {
 
@@ -9,6 +13,7 @@ public class Scheduler {
 	// Adicionado listas
 	private List<Event> events;
 	private List<Entity> entitys;
+	private List<EntitySet> entitySet;
 	private List<Resource> resources;
 
 	public Double getTime() {
@@ -81,7 +86,11 @@ public class Scheduler {
 	 * processar (FEL vazia, i.e., lista de eventos futuros vazia)
 	 */
 	public void simulate() {
+		//Fila1 0:30
+		EntitySet fila1 = entitySet.stream().filter(it -> it.getName().equals("Fila1")).findAny().orElseThrow();
+		fila1.insert(new Costumer("Cliente", 1));
 
+		fila1.remove();
 	}
 
 	/*
@@ -107,7 +116,7 @@ public class Scheduler {
 	 * instancia nova Entity e destroyEntity(id)
 	 */
 	public void createEntity(Entity entity) {
-
+		entitys.add(new Waiter("Garçom", 1));
 	}
 
 	/*
@@ -117,8 +126,10 @@ public class Scheduler {
 		throw new Exception("IMPLEMENTAR");
 	}
 
-	public Integer createResource(String name, Double quantity) throws Exception {
-		throw new Exception("IMPLEMENTAR");
+	public Integer createResource(String name, int quantity) throws Exception {
+		var resource = new Resource(1, name, quantity);
+		resources.add(resource);
+		return resource.getId();
 	}
 
 	/*
@@ -151,7 +162,9 @@ public class Scheduler {
 	}
 
 	public Integer createEntitySet(String name, Integer mode, Integer maxPossibleSize) throws Exception {
-		throw new Exception("IMPLEMENTAR");
+		var fila1 = new EntitySet(1, "Fila1", FIFO, 10);
+		entitySet.add(fila1);
+		return fila1.getId();
 	}
 
 	/*

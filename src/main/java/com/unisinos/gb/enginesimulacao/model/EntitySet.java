@@ -13,15 +13,19 @@ public class EntitySet {
     private QueueModeEnum mode;
     private int size;
 
-    public EntitySet(String name, QueueModeEnum mode, int maxPossibleSize) {
+    public EntitySet(int id, String name, QueueModeEnum mode, int maxPossibleSize) {
         this.name = name;
         this.mode = mode;
         this.maxPossibleSize = maxPossibleSize;
         this.entityList = new ArrayList<>();
-        this.id = 0;
+        this.id = id;
     }
 
     public void insert(Entity entity) {
+        if (isFull()) {
+            throw new RuntimeException("Fila cheia!");
+        }
+        entity.insertEntitySet(this);
         entityList.add(entity);
     }
 
@@ -39,36 +43,36 @@ public class EntitySet {
         return entity;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return entityList.isEmpty();
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         return entityList.size() == maxPossibleSize;
     }
 
     //TODO
-    public double averageTimeInSet(){
+    public double averageTimeInSet() {
         return 0;
     }
 
     //TODO
-    public double maxTimeInSet(){
+    public double maxTimeInSet() {
         return 0;
     }
 
     //TODO
-    public double startLog(){
+    public double startLog() {
         return 0;
     }
 
     //TODO
-    public double stopLog(){
+    public double stopLog() {
         return 0;
     }
 
     //TODO
-    public double getLog(){
+    public double getLog() {
         return 0;
     }
 

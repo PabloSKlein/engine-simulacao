@@ -1,55 +1,63 @@
 package com.unisinos.gb.enginesimulacao.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public abstract class Entity {
 
-	private String name;
-	private Integer id;
-	private long creationTime;
-	private Integer priority;
-	// private PetriNet petriNet;
+    private String name;
+    private Integer id;
+    private long creationTime;
+    private Integer priority;
+    private List<EntitySet> entitySetList = new ArrayList<>();
+    private PetriNet petriNet;
 
-	public Entity(String name) {
-		this.name = name;
-	}
+    public Entity(String name, Integer id) {
+        this.name = name;
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void insertEntitySet(EntitySet entitySet) {
+        entitySetList.add(entitySet);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public long getCreationTime() {
-		return creationTime;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setCreationTime(long creationTime) {
-		this.creationTime = creationTime;
-	}
+    public long getCreationTime() {
+        return creationTime;
+    }
 
-	public Integer getPriority() {
-		return priority;
-	}
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
 
-	public void setPriority(Integer priority) {
-		this.priority = priority;
-	}
+    public Integer getPriority() {
+        return priority;
+    }
 
-	public long getTimeSinceCreation() {
-		long atual = new Date().getTime();
-		return atual - getCreationTime();
-	}
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public long getTimeSinceCreation() {
+        long atual = new Date().getTime();
+        return atual - getCreationTime();
+    }
 
 //	public Entity(String name,PetriNet  petriNet) {
 //		this.name = name;
