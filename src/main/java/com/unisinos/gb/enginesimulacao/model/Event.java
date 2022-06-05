@@ -1,12 +1,16 @@
 package com.unisinos.gb.enginesimulacao.model;
 
-public class Event {
-    private final String name;
-    private final Integer eventId;
+import com.unisinos.gb.enginesimulacao.enumeration.EventEnum;
 
-    public Event(String name) {
+public class Event {
+    private final Integer eventId;
+    private final String name; //INSERT FILA1
+    private final EventEnum eventType;
+
+    public Event(int eventId, String name, EventEnum eventType) {
+        this.eventId = eventId;
         this.name = name;
-        this.eventId = 1;
+        this.eventType = eventType;
     }
 
     public String getName() {
