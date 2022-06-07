@@ -1,11 +1,11 @@
-package com.unisinos.gb.enginesimulacao.model;
+package com.unisinos.gb.enginesimulacao.model.resources;
 
 public class Resource {
     private final String name;
     private final int id;
     private final int quantity;
 
-    Resource(int id, String name, int quantity) {
+    public Resource(int id, String name, int quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;

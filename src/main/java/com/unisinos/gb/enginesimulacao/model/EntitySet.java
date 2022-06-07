@@ -1,6 +1,7 @@
 package com.unisinos.gb.enginesimulacao.model;
 
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
+import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;

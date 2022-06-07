@@ -1,4 +1,7 @@
-package com.unisinos.gb.enginesimulacao.model;
+package com.unisinos.gb.enginesimulacao.model.entity;
+
+import com.unisinos.gb.enginesimulacao.model.EntitySet;
+import com.unisinos.gb.enginesimulacao.model.PetriNet;
 
 import java.util.ArrayList;
 import java.util.Date;

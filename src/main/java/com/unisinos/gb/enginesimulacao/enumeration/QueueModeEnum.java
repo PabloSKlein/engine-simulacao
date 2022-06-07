@@ -1,6 +1,6 @@
 package com.unisinos.gb.enginesimulacao.enumeration;
 
-import com.unisinos.gb.enginesimulacao.model.Entity;
+import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 
 import java.util.Comparator;
 import java.util.List;
