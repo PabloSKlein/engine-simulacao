@@ -12,7 +12,6 @@ public class EntitySet {
     private final int maxPossibleSize;
     private final List<Entity> entityList;
     private QueueModeEnum mode;
-    private int size;
 
     public EntitySet(int id, String name, QueueModeEnum mode, int maxPossibleSize) {
         this.name = name;
@@ -102,10 +101,6 @@ public class EntitySet {
     }
 
     public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
+        return this.entityList.size();
     }
 }

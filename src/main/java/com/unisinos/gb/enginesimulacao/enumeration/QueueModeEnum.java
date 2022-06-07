@@ -5,6 +5,7 @@ import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public enum QueueModeEnum {
     FIFO {
@@ -31,7 +32,7 @@ public enum QueueModeEnum {
 
     public abstract Entity remove(List<Entity> entityList);
 
-    public int randomIntFromInterval(int min, int max) { // min and max included
-        return new Random().nextInt() * (max - min + 1) + min;
+    public static int randomIntFromInterval(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 }

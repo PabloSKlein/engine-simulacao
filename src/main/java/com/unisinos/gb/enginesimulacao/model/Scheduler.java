@@ -5,6 +5,8 @@ import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,51 +16,57 @@ public class Scheduler {
     private int id = 0;
 
     // Adicionado listas
-    private List<Event> events;
-    private List<Process> processes;
+    private final List<Event> eventosAgendados = new ArrayList<>();
+    private final List<Process> processosAgendados = new ArrayList<>();
+
+    private final List<EntitySet> entitySetList = new ArrayList<>();
+
+    public void addEntitySet(EntitySet entitySet) {
+        this.entitySetList.add(entitySet);
+    }
+
+    public List<EntitySet> entitySetList() {
+        return this.entitySetList;
+    }
 
     public Double getTime() {
         return time;
     }
 
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public List<Event> getEventosAgendados() {
+        return eventosAgendados;
     }
 
     // disparo de eventos e processos =============================================
 
     public void scheduleNow(Event event) {
         event.setTime(this.time);
-        events.add(event);
+        eventosAgendados.add(event);
     }
 
     public void scheduleIn(Event event, Double timeToEvent) {
         event.setTime(time + timeToEvent);
-        events.add(event);
+        eventosAgendados.add(event);
     }
 
     public void scheduleAt(Event event, Double absoluteTime) {
         event.setTime(absoluteTime);
-        events.add(event);
+        eventosAgendados.add(event);
     }
 
     public void startProcessNow(Process process) {
         process.setTime(time);
-        processes.add(process);
+        processosAgendados.add(process);
     }
 
     public void startProcessIn(Process process, Double timeToStart) {
         process.setTime(time + timeToStart);
-        processes.add(process);
+        processosAgendados.add(process);
     }
 
     public void startProcessAt(Process process, Double absoluteTime) {
         process.setTime(absoluteTime);
-        processes.add(process);
+        processosAgendados.add(process);
     }
 
     /**
@@ -76,7 +84,15 @@ public class Scheduler {
      * processar (FEL vazia, i.e., lista de eventos futuros vazia)
      */
     public void simulate() {
-
+        while (!eventosAgendados.isEmpty()) {
+            eventosAgendados.stream().min(Comparator.comparing(Event::getTime))
+                    .ifPresent(menorEvento -> {
+                        this.time = menorEvento.getTime();
+                        menorEvento.execute();
+                        eventosAgendados.remove(menorEvento);
+                    });
+        }
+        System.out.println("Todos eventos processados.");
     }
 
     /*
@@ -143,26 +159,26 @@ public class Scheduler {
     }
 
     // random variates
-    
+
     /**
      * Retorna uma distribuição uniforme entre o valor minimo e o valor máximo
      */
     public double uniform(Integer minValue, Integer maxValue) throws Exception {
-    	return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
+        return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
     }
 
     /*
      * Retorna uma distribuição exponencial de acordo com a média
      */
-    public double exponential(Integer meanValue) throws Exception {
-    	double m = 1 / meanValue;
-		return m*(Math.exp((-m*this.getTime())));
+    public double exponential(Integer meanValue) {
+        double m = 1 / meanValue;
+        return m * (Math.exp((-m * this.getTime())));
     }
-    
+
     /**
      * Retorna uma distribuição normal utilizando a média e o valor de desvio padrão
      */
     public double normal(Double meanValue, Double stdDeviationValue) {
-    	return (this.getTime() - meanValue)/stdDeviationValue;
+        return (this.getTime() - meanValue) / stdDeviationValue;
     }
 }
