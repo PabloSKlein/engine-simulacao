@@ -6,6 +6,7 @@ import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Scheduler {
 
@@ -142,19 +143,26 @@ public class Scheduler {
     }
 
     // random variates
-
+    
+    /**
+     * Retorna uma distribuição uniforme entre o valor minimo e o valor máximo
+     */
     public double uniform(Integer minValue, Integer maxValue) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
     }
 
     /*
-     *
+     * Retorna uma distribuição exponencial de acordo com a média
      */
     public double exponential(Integer meanValue) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	double m = 1 / meanValue;
+		return m*(Math.exp((-m*this.getTime())));
     }
-
+    
+    /**
+     * Retorna uma distribuição normal utilizando a média e o valor de desvio padrão
+     */
     public double normal(Double meanValue, Double stdDeviationValue) {
-        return 0;
+    	return (this.getTime() - meanValue)/stdDeviationValue;
     }
 }
