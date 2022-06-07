@@ -1,15 +1,17 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
-public abstract class Process {
+import com.unisinos.gb.enginesimulacao.model.Executable;
+
+public abstract class Process extends Executable {
     private final String name;
     private final Integer processId;
-    private final Long duration;
+    private final Double duration;
     private boolean active;
 
-    public Process(int id, String name, Long duration) {
+    public Process(int id, String name, Double duration) {
+        this.processId = id;
         this.name = name;
         this.duration = duration;
-        this.processId = id;
     }
 
     public String getName() {
@@ -20,7 +22,7 @@ public abstract class Process {
         return processId;
     }
 
-    public Long getDuration() {
+    public Double getDuration() {
         return duration;
     }
 
@@ -40,7 +42,7 @@ public abstract class Process {
         this.executeOnStart();
 
         try {
-            Thread.sleep(duration);
+            Thread.sleep(duration.longValue());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

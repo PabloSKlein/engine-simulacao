@@ -1,6 +1,8 @@
 package com.unisinos.gb.enginesimulacao.model.event;
 
-public class Event {
+import com.unisinos.gb.enginesimulacao.model.Executable;
+
+public class Event extends Executable {
     private final Integer eventId;
     private final String name;
 

@@ -10,12 +10,10 @@ import java.util.List;
 public class Scheduler {
 
     private Double time;
+    private int id = 0;
 
     // Adicionado listas
     private List<Event> events;
-    private List<Entity> entitys;
-    private List<EntitySet> entitySets;
-    private List<Resource> resources;
     private List<Process> processes;
 
     public Double getTime() {
@@ -26,22 +24,6 @@ public class Scheduler {
         return events;
     }
 
-    public List<Entity> getEntitys() {
-        return entitys;
-    }
-
-    public void setEntitys(List<Entity> entitys) {
-        this.entitys = entitys;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
-
     public void setEvents(List<Event> events) {
         this.events = events;
     }
@@ -49,28 +31,33 @@ public class Scheduler {
     // disparo de eventos e processos =============================================
 
     public void scheduleNow(Event event) {
+        event.setTime(this.time);
         events.add(event);
     }
 
-    public void scheduleIn(Event event, long timeToEvent) {
-
+    public void scheduleIn(Event event, Double timeToEvent) {
+        event.setTime(time + timeToEvent);
+        events.add(event);
     }
 
-    public void scheduleAt(Event event, long absoluteTime) {
-
+    public void scheduleAt(Event event, Double absoluteTime) {
+        event.setTime(absoluteTime);
+        events.add(event);
     }
 
-    public void startProcessNow(Integer processId) {
-        var process = processes.stream().filter(it -> it.getProcessId().equals(processId)).findAny().orElseThrow();
-        process.excute();
+    public void startProcessNow(Process process) {
+        process.setTime(time);
+        processes.add(process);
     }
 
-    public void startProcessIn(Integer processId, long timeToStart) {
-
+    public void startProcessIn(Process process, Double timeToStart) {
+        process.setTime(time + timeToStart);
+        processes.add(process);
     }
 
-    public void startProcessAt(Integer processId, long absoluteTime) {
-
+    public void startProcessAt(Process process, Double absoluteTime) {
+        process.setTime(absoluteTime);
+        processes.add(process);
     }
 
     /**
@@ -88,11 +75,7 @@ public class Scheduler {
      * processar (FEL vazia, i.e., lista de eventos futuros vazia)
      */
     public void simulate() {
-        //Fila1 0:30
-        EntitySet fila1 = entitySets.stream().filter(it -> it.getName().equals("Fila1")).findAny().orElseThrow();
-        fila1.insert(new Costumer("Cliente", 1));
 
-        fila1.remove();
     }
 
     /*
@@ -115,34 +98,18 @@ public class Scheduler {
     // ===============================================
 
     /*
-     * instancia nova Entity e destroyEntity(id)
-     */
-    public void createEntity(Entity entity) {
-        entitys.add(new Waiter("Garçom", 1));
-    }
-
-    /*
      * retorna referência para instância de Entity
      */
     public Entity getEntity(Integer id) throws Exception {
         throw new Exception("IMPLEMENTAR");
     }
 
-    public Integer createResource(Resource resource) {
-        resources.add(resource);
-        return resource.getId();
-    }
 
     /*
      * retorna referência para instância de Resource
      */
     public Resource getResource(Integer id) throws Exception {
         throw new Exception("IMPLEMENTAR");
-    }
-
-    public Integer createProcess(Process process) {
-        processes.add(process);
-        return process.getProcessId();
     }
 
     /*
@@ -153,8 +120,11 @@ public class Scheduler {
     }
 
     public Integer createEvent(Event event) {
-        events.add(event);
-        return event.getEventId();
+        return 1;
+    }
+
+    public Integer getId() {
+        return ++id;
     }
 
     /*
@@ -162,11 +132,6 @@ public class Scheduler {
      */
     public Event getEvent(Integer eventId) throws Exception {
         throw new Exception("IMPLEMENTAR");
-    }
-
-    public Integer createEntitySet(EntitySet teste) {
-        entitySets.add(teste);
-        return teste.getId();
     }
 
     /*

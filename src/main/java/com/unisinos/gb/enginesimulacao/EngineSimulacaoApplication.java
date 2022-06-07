@@ -9,31 +9,33 @@ import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class EngineSimulacaoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EngineSimulacaoApplication.class, args);
 
-
         Scheduler de = new Scheduler();
 
-        var caixa1 = new Caixa(1, "CAIXA1", 1);
-        de.createResource(caixa1);
+        var recursoCaixa1 = new Caixa(de.getId(), "CAIXA1", 1);
+        var filaCaixa1 = new EntitySet(de.getId(), "FILACAIXA1", QueueModeEnum.FIFO, 10);
 
-        var filaCaixa1 = new EntitySet(1, "FILACAIXA1", QueueModeEnum.FIFO, 10);
-        de.createEntitySet(filaCaixa1);
+        var tempos = new ArrayList<>(List.of(0.000997185, 0.009546665, 0.010303237));
 
-        var eventoChegada = new Chegada(1, "CHEGADA", filaCaixa1);
-        de.createEvent(eventoChegada);
-
-        var atendimentocaixa = new AtendimentoCaixa(1, "ATENDIMENTOCAIXA", de.normal(8.0, 2.0), filaCaixa1, caixa1);
-        de.createProcess(atendimentocaixa);
-
-        de.scheduleNow(eventoChegada);
-        de.startProcessNow(atendimentocaixa.getProcessId());
+        tempos.forEach(it -> criaChegadaFila(de, recursoCaixa1, filaCaixa1, it));
 
         de.simulate();
+    }
+
+    private static void criaChegadaFila(Scheduler de, Caixa recursoCaixa1, EntitySet filaCaixa1, double time) {
+        var eventoChegada = new Chegada(de.getId(), "CHEGADA", filaCaixa1);
+        var processoAtendimentocaixa = new AtendimentoCaixa(de.getId(), "ATENDIMENTOCAIXA", de.normal(8.0, 2.0), filaCaixa1, recursoCaixa1);
+
+        de.scheduleAt(eventoChegada, time);
+        de.startProcessAt(processoAtendimentocaixa, time);
     }
 
 }
