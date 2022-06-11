@@ -8,4 +8,11 @@ public class GrupoCliente extends Entity {
     public GrupoCliente(Integer id, String name) {
         super(name, id);
     }
+
+	@Override
+	public String toString() {
+		return "GrupoCliente "+this.getId()+"[quantidade=" + quantidade + ", hora de chegada=" + this.getCreationTime()+"]";
+	}
+    
+    
 }

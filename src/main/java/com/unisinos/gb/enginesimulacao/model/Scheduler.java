@@ -1,6 +1,7 @@
 package com.unisinos.gb.enginesimulacao.model;
 
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
+import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
@@ -170,15 +171,59 @@ public class Scheduler {
     /*
      * Retorna uma distribuição exponencial de acordo com a média
      */
-    public double exponential(Integer meanValue) {
-        double m = 1 / meanValue;
-        return m * (Math.exp((-m * this.getTime())));
+    public double exponential(double meanValue, double time) {
+        double m = (double)1 / meanValue;
+        return m * (Math.exp((-m * time)));
+    }
+    
+    /**
+     * 
+     */
+    public double exponentialScheduler(double meanValue) {
+    	return this.exponential(meanValue,this.getTime());
+    }
+    
+    
+    public List<GrupoCliente> createArrivalByTime(double time) {
+    	List<GrupoCliente> gcList = new ArrayList<>();
+    	for(int i=(int)time;i>0;i = i-3) {
+    		double timeArrival = this.exponential((i/3), i);
+    		GrupoCliente gc = this.createGroup();
+    		gc.setCreationTime(timeArrival);
+    		System.out.println(gc);
+    		gcList.add(gc);
+    	}
+    	return gcList;
+    }
+    
+    /**
+     * Método de exemplo para retornar um tempo de chegada para um usuário, a cada 3 minutos
+     * a média vai ser 1 fixada pelo fato de estar gerando apenas 1 a cada 3 minutos.
+     * Se fosse gerar por exemplo por uma hora, então a média seria 60/3, e seria necessário
+     * então reduzir de 3 em 3 o 60 e fazer a média e então calcular o horário,
+     * se precisar faço mais adiante.
+     */
+    public GrupoCliente createGroup() {
+    	int idCliente = this.getId();
+    	GrupoCliente gc = new GrupoCliente(idCliente, "Grupo Cliente "+ idCliente);
+    	return gc;
     }
 
     /**
      * Retorna uma distribuição normal utilizando a média e o valor de desvio padrão
      */
-    public double normal(Double meanValue, Double stdDeviationValue) {
-        return (this.getTime() - meanValue) / stdDeviationValue;
+    public double normal(Double meanValue, Double stdDeviationValue, double time) {
+        return (time - meanValue) / stdDeviationValue;
     }
+    
+    /**
+     * 
+     */
+    public double normalScheduler(Double meanValue, Double stdDeviationValue) {
+    	return this.normal(meanValue, stdDeviationValue, this.getTime());
+    }
+    
+    public static void main(String[] args) {
+		new Scheduler().createArrivalByTime(60);
+	}
 }

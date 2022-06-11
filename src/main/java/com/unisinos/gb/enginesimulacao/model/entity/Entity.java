@@ -11,7 +11,7 @@ public abstract class Entity {
 
     private String name;
     private Integer id;
-    private long creationTime;
+    private double creationTime;
     private Integer priority;
     private List<EntitySet> entitySetList = new ArrayList<>();
     private PetriNet petriNet;
@@ -41,11 +41,11 @@ public abstract class Entity {
         this.id = id;
     }
 
-    public long getCreationTime() {
+    public double getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(long creationTime) {
+    public void setCreationTime(double creationTime) {
         this.creationTime = creationTime;
     }
 
@@ -57,7 +57,7 @@ public abstract class Entity {
         this.priority = priority;
     }
 
-    public long getTimeSinceCreation() {
+    public double getTimeSinceCreation() {
         long atual = new Date().getTime();
         return atual - getCreationTime();
     }
