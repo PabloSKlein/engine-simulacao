@@ -4,7 +4,6 @@ import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum QueueModeEnum {

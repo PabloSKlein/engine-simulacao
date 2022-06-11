@@ -19,8 +19,8 @@ public class Scheduler {
     // Adicionado listas
     private final List<Event> eventosAgendados = new ArrayList<>();
     private final List<Process> processosAgendados = new ArrayList<>();
-
     private final List<EntitySet> entitySetList = new ArrayList<>();
+    private final List<Process> processes = new ArrayList<>();
 
     public void addEntitySet(EntitySet entitySet) {
         this.entitySetList.add(entitySet);
@@ -92,6 +92,11 @@ public class Scheduler {
                         menorEvento.execute();
                         eventosAgendados.remove(menorEvento);
                     });
+
+
+            processes.stream()
+                    .filter(Process::deveProcessar)
+                    .forEach(Process::excute);
         }
         System.out.println("Todos eventos processados.");
     }
@@ -226,4 +231,8 @@ public class Scheduler {
     public static void main(String[] args) {
 		new Scheduler().createArrivalByTime(60);
 	}
+
+    public void addProcess(Process process) {
+        processes.add(process);
+    }
 }

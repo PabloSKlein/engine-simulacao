@@ -5,6 +5,6 @@ import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 public class Waiter extends Entity {
 
     public Waiter(String name, int id) {
-        super(name, id);
+        super(id, name);
     }
 }
