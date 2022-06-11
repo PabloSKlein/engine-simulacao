@@ -8,4 +8,8 @@ public class GrupoCliente extends Entity {
     public GrupoCliente(Integer id, String name) {
         super(name, id);
     }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
 }
