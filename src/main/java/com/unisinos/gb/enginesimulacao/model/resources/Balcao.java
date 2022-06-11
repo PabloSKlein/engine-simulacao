@@ -5,7 +5,7 @@ public class Balcao extends Resource {
         super(id, name, quantidade);
     }
 
-    public boolean isOccupied(){
+    /*public boolean isOccupied(){
         if(this.quantidade>=1)
             return false;
         else
@@ -14,5 +14,5 @@ public class Balcao extends Resource {
 
     public void ocupaBanco(){
         --this.quantidade;
-    }
+    }*/
 }

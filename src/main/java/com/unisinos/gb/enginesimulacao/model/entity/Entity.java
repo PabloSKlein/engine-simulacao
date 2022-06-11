@@ -9,16 +9,16 @@ import java.util.List;
 
 public abstract class Entity {
 
-    private String name;
     private Integer id;
+    private String name;
     private long creationTime;
     private Integer priority;
     private List<EntitySet> entitySetList = new ArrayList<>();
     private PetriNet petriNet;
 
-    public Entity(String name, Integer id) {
-        this.name = name;
+    protected Entity(Integer id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     public void insertEntitySet(EntitySet entitySet) {

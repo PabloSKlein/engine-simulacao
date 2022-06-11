@@ -4,8 +4,11 @@ import com.unisinos.gb.enginesimulacao.model.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 
 public class Chegada extends Event {
+    private final EntitySet fila2;
+
     public Chegada(int eventId, String name, EntitySet fila1, EntitySet fila2) {
-        super(eventId, name, fila1, fila2);
+        super(eventId, name, fila1);
+        this.fila2 = fila2;
     }
 
     @Override
@@ -14,6 +17,6 @@ public class Chegada extends Event {
     }
 
     private EntitySet getMenorFila() {
-        return getFila1().getSize() <= getFila2().getSize() ? getFila1() : getFila2();
+        return getFila().getSize() <= fila2.getSize() ? getFila() : fila2;
     }
 }

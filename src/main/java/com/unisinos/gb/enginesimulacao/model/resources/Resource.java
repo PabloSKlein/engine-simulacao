@@ -1,22 +1,34 @@
 package com.unisinos.gb.enginesimulacao.model.resources;
 
-public class Resource {
+public abstract class Resource {
     private final String name;
     private final int id;
     private final int quantity;
+    private int recursosAlocados = 0;
 
-    public Resource(int id, String name, int quantity) {
+    protected Resource(int id, String name, int quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
     }
 
+    public boolean podeAlocarRecurso(){
+       return recursosAlocados < quantity;
+    }
+
     public boolean allocate() {
+        if(this.podeAlocarRecurso()){
+            recursosAlocados ++;
+            return true;
+        }
         return true;
     }
 
     public boolean release() {
-        return false;
+        if(recursosAlocados > 0){
+            recursosAlocados --;
+        }
+        return true;
     }
 
     public double allocationRate() {

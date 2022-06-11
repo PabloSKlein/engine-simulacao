@@ -8,7 +8,7 @@ public abstract class Process extends Executable {
     private final Double duration;
     private boolean active;
 
-    public Process(int id, String name, Double duration) {
+    protected Process(int id, String name, Double duration) {
         this.processId = id;
         this.name = name;
         this.duration = duration;
@@ -49,4 +49,6 @@ public abstract class Process extends Executable {
 
         this.executeOnEnd();
     }
+
+    public abstract boolean deveProcessar();
 }
