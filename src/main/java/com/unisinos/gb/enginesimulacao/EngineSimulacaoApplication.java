@@ -59,23 +59,19 @@ public class EngineSimulacaoApplication {
         boolean achouMesa = false;
         boolean achouBanco = false;
         if(group.quantidade>=2)
-            temMesa(mesas,achouMesa);
+            temMesa(mesas,achouMesa, group);
         else
-            temBalcao(balcao,achouBanco);
+            temBalcao(balcao,achouBanco,group);
 
-        if(achouMesa){
-            //aloca
-        }else{
+        if(!achouMesa){
             filaMesas.inset(group);
         }
-        if(achouBanco){
-            //aloca
-        }else{
+        if(!achouBanco){
             filaBalcao.insert(group);
         }
     }
 
-    private static void temMesa(Mesa[] mesas, int achouMesa) {
+    private static void temMesa(Mesa[] mesas, int achouMesa, Group group) {
         for (int i = 0; i < mesas.length; i++) {
             if (group.getQuantidade == 2) {
                 if (i < 4) {
@@ -101,7 +97,7 @@ public class EngineSimulacaoApplication {
         }
     }
 
-    private static void temBalcao(Balcao balcao, int achouBanco){
+    private static void temBalcao(Balcao balcao, int achouBanco, Group group){
         if(balcao.isOccupied() == false){
             balcao.ocupaBanco();
             achouBanco = true;
