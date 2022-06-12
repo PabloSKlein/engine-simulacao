@@ -9,6 +9,7 @@ import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Scheduler {
@@ -176,23 +177,21 @@ public class Scheduler {
     /*
      * Retorna uma distribuição exponencial de acordo com a média
      */
-    public double exponential(double meanValue, double time) {
+    public double exponential(double meanValue) {
         double m = (double)1 / meanValue;
-        return m * (Math.exp((-m * time)));
+        return m * (Math.exp((-m * (1- new Random().nextDouble()))));
     }
     
-    /**
-     * 
-     */
-    public double exponentialScheduler(double meanValue) {
-    	return this.exponential(meanValue,this.getTime());
-    }
     
+    public double testExponential(double meanValue) {
+    	double lambda = (double)1/ meanValue;
+    	return Math.log((1- new Random().nextDouble()))/(-lambda);
+    }
     
     public List<GrupoCliente> createArrivalByTime(double time) {
     	List<GrupoCliente> gcList = new ArrayList<>();
-    	for(int i=(int)time;i>0;i = i-3) {
-    		double timeArrival = this.exponential((i/3), i);
+    	for(int i=3;i<=time;i = i+3) {
+    		double timeArrival = this.exponential(3);
     		GrupoCliente gc = this.createGroup();
     		gc.setCreationTime(timeArrival);
     		System.out.println(gc);
