@@ -1,6 +1,5 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 
@@ -9,8 +8,8 @@ public abstract class Process extends Event {
 	private final Double duration;
 	private boolean active;
 
-	public Process(Integer id, String name, Scheduler scheduler, EntitySet fila, double time, Double duration, boolean active) {
-		super(id, name, scheduler, fila, time);
+	public Process(Integer id, String name, Scheduler scheduler, double time, Double duration, boolean active) {
+		super(id, name, scheduler, time);
 		this.duration = duration;
 		this.active = active;
 	}
