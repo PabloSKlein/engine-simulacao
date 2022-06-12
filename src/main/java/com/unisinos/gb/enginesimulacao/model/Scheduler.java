@@ -15,6 +15,7 @@ import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
+import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
 
 public class Scheduler {
 
@@ -37,6 +38,17 @@ public class Scheduler {
 	private EntitySet filaCaixa2 = new EntitySet(generateId(), "FILA CAIXA 2", QueueModeEnum.FIFO, 100);
 	private EntitySet filaPedido = new EntitySet(generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
 
+	private Balcao = new Balcao(this.id(),"BALCAO", 6);
+	private Mesa[] mesas = new ArrayList<Mesa>();
+
+	public void startMesas(){
+		for (int i = 0; i < this.mesas.length; i++) {
+			if (i < 4)
+				this.mesas[i] = new Mesa(this.getI(), "MESA " + i, 2);
+			else
+				this.mesas[i] = new Mesa(this.getId(), "MESA " + i, 4);
+		}
+	}
 	public void criaChegadaFila(double time) {
 		int id = this.generateId();
 		this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2), time);
