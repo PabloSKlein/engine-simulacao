@@ -8,11 +8,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
+import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
+import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class Scheduler {
@@ -44,11 +46,22 @@ public class Scheduler {
 	private Process atendimentoCaixa1 = criaAtendimento(0.0, filaCaixa1, filaPedido, filaBalcao, filaMesas, caixa1);
 	private Process atendimentoCaixa2 = criaAtendimento(0.0, filaCaixa2, filaPedido, filaBalcao, filaMesas, caixa2);
 
-	// public void criaChegadaFila(double time) {
-	// int id = this.generateId();
-	// this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2),
-	// time);
-	// }
+	private Balcao balcao = new Balcao(this.id(), "BALCAO", 6);
+	private Mesa[] mesas = new ArrayList<Mesa>();
+
+	public void startMesas() {
+		for (int i = 0; i < this.mesas.length; i++) {
+			if (i < 4)
+				this.mesas[i] = new Mesa(this.getI(), "MESA " + i, 2);
+			else
+				this.mesas[i] = new Mesa(this.getId(), "MESA " + i, 4);
+		}
+	}
+
+	public void criaChegadaFila(double time) {
+		int id = this.generateId();
+		this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2), time);
+	}
 
 	public void addEntitySet(EntitySet entitySet) {
 		this.entitySetList.add(entitySet);
