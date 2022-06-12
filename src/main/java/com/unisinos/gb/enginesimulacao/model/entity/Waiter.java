@@ -1,6 +1,4 @@
-package com.unisinos.gb.enginesimulacao.model;
-
-import com.unisinos.gb.enginesimulacao.model.entity.Entity;
+package com.unisinos.gb.enginesimulacao.model.entity;
 
 public class Waiter extends Entity {
 
