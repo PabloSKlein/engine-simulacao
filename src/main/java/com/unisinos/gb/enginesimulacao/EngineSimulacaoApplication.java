@@ -6,6 +6,9 @@ import com.unisinos.gb.enginesimulacao.model.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
+import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
+import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
+import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +27,13 @@ public class EngineSimulacaoApplication {
         var filaPedido = new EntitySet(de.getId(), "FILAPEDIDO", QueueModeEnum.FIFO, 10);
 
         //Inicializa os recursos de balcão e de mesas
-        var balcao = new Balcao(de.getId(),'BALCAO', 6);
+        var balcao = new Balcao(de.getId(), "BALCAO", 6);
         var mesas = new Mesa[8];
-        for (int i = 0; i< mesas.length;i++){
-            if(i < 4)
-                mesas[i] = new Mesa(de.getId(), "MESA " + i,2);
+        for (int i = 0; i < mesas.length; i++) {
+            if (i < 4)
+                mesas[i] = new Mesa(de.getId(), "MESA " + i, 2);
             else
-                mesas[i] = new Mesa(de.getId(), "MESA " + i,4);
+                mesas[i] = new Mesa(de.getId(), "MESA " + i, 4);
         }
 
         //para fins de log
@@ -58,21 +61,22 @@ public class EngineSimulacaoApplication {
         de.scheduleAt(new Chegada(de.getId(), "CHEGADA", filaCaixa1, filaCaixa2), time);
     }
 
-    private static void vaiProBlacãoOuMesa(EntitySet filaBalcao, EntitySet filaMesas, Balcao balcao, Mesa[] mesas,GroupClient group) {
-        boolean achouMesa = achouBanco = false;
-        if (group.quantidade >= 2)
+    private static void vaiProBlacãoOuMesa(EntitySet filaBalcao, EntitySet filaMesas, Balcao balcao, Mesa[] mesas, GrupoCliente group) {
+        boolean achouMesa = false;
+        boolean achouBanco = false;
+        if (group.getQuantidade() >= 2)
             temMesa(mesas, achouMesa, group, filaMesas);
         else
             temBalcao(balcao, achouBanco, group, filaBalcao);
     }
 
-    private static void temMesa(Mesa[] mesas, int achouMesa, Group group) {
+    private static void temMesa(Mesa[] mesas, boolean achouMesa, GrupoCliente group, EntitySet filaMesas) {
         for (int i = 0; i < mesas.length; i++) {
-            if (group.getQuantidade == 2) {
+            if (group.getQuantidade() == 2) {
                 if (i < 4) {
                     if (mesas[i].getIsOccupied() == 0) {
                         mesas[i].setIsOccupied(1);
-                        achouMesa = true
+                        achouMesa = true;
                         break;
                     } else if (mesas[3].getIsOccupied() == 1) {
                         achouMesa = false;
@@ -81,7 +85,7 @@ public class EngineSimulacaoApplication {
                 } else {
                     if (mesas[i].getIsOccupied() == 0) {
                         mesas[i].setIsOccupied(1);
-                        achouMesa = true
+                        achouMesa = true;
                         break;
                     } else if (mesas[7].getIsOccupied() == 1) {
                         achouMesa = false;
@@ -92,17 +96,19 @@ public class EngineSimulacaoApplication {
         }
 
         if (!achouMesa) {
-            filaMesas.inset(group);
+            filaMesas.insert(group);
         }
     }
 
-    private static void temBalcao(Balcao balcao, int achouBanco, Group group, EntitySet filaBanco){
-        if(balcao.isOccupied() == false){
+    private static void temBalcao(Balcao balcao, boolean achouBanco, GrupoCliente group, EntitySet filaBalcao) {
+        if (balcao.isOccupied() == false) {
             balcao.ocupaBanco();
             //Faço o que com o grupo de pessoas?
             achouBanco = true;
-        }else{
+        } else {
             filaBalcao.insert(group);
         }
     }
+
+}
 
