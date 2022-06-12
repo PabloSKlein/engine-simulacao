@@ -92,7 +92,7 @@ public class Scheduler {
      * explícita
      */
     public void waitFor(long time) {
-
+    	
     }
 
     // controlando tempo de execução ===============================================
@@ -123,15 +123,19 @@ public class Scheduler {
      * um evento e para; insere numa fila e para, etc.
      */
     public void simulateOneStep() {
-
+//    	this.eventosAgendados.get(0).execute();
     }
 
     public void simulateBy(long duration) {
-
+    	while(this.getTime() <= duration) {
+    		// simula
+    	}
     }
 
     public void simulateUntil(long absoluteTime) {
-
+    	while(this.getTime() < absoluteTime) {
+    		// simula
+    	}
     }
 
     // criação, destruição e acesso para componentes
@@ -141,7 +145,13 @@ public class Scheduler {
      * retorna referência para instância de Entity
      */
     public Entity getEntity(Integer id) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	Entity searchedEntity = null;
+        for(EntitySet entitySet : this.entitySetList) {
+        	searchedEntity = entitySet.getEntityList().stream().filter(e -> e.getId() == id.intValue()).findAny().orElse(null);
+        	if(searchedEntity != null)
+        		return searchedEntity;
+        }
+        return null;
     }
 
 
@@ -156,7 +166,7 @@ public class Scheduler {
      * retorna referência para instancia de Process
      */
     public Process getProcess(Integer processId) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	return this.processes.stream().filter(p -> p.getProcessId().intValue() == processId.intValue()).findAny().orElse(null);
     }
 
     public Integer createEvent(Event event) {
@@ -171,14 +181,14 @@ public class Scheduler {
      * retorna referência para instancia de Event
      */
     public Event getEvent(Integer eventId) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+        return this.eventosAgendados.stream().filter(e -> e.getEventId().intValue() == eventId.intValue()).findAny().orElse(null);
     }
 
     /*
      * retorna referência para instancia de EntitySet
      */
     public EntitySet getEntitySet(Integer id) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+        return this.entitySetList.stream().filter(esl -> esl.getId() == id.intValue()).findAny().orElse(null);
     }
 
     // random variates
@@ -227,10 +237,10 @@ public class Scheduler {
     	return this.normal(meanValue, stdDeviationValue, this.getTime());
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args){
 		Scheduler de = new Scheduler();
 		de.createArrivalByTime(60);
-//		System.out.println(de.getEventosAgendados());
+		System.out.println(de.getEventosAgendados().toString());
 	}
 
     public void addProcess(Process process) {

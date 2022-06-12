@@ -30,7 +30,7 @@ public abstract class Event extends Executable {
 
 	@Override
 	public String toString() {
-		return "Event [eventId=" + eventId + ", name=" + name + ", fila=" + fila + "]";
+		return "Event [eventId=" + eventId + ", name=" + name +", time="+ this.getTime() + ", fila=" + fila + "] \n";
 	}
 
 }
