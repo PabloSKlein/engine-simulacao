@@ -1,54 +1,52 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
-import com.unisinos.gb.enginesimulacao.model.Executable;
+import com.unisinos.gb.enginesimulacao.model.EntitySet;
+import com.unisinos.gb.enginesimulacao.model.Scheduler;
+import com.unisinos.gb.enginesimulacao.model.event.Event;
 
-public abstract class Process extends Executable {
-    private final String name;
-    private final Integer processId;
-    private final Double duration;
-    private boolean active;
+public abstract class Process extends Event {
 
-    protected Process(int id, String name, Double duration) {
-        this.processId = id;
-        this.name = name;
-        this.duration = duration;
-    }
+	private final Double duration;
+	private boolean active;
 
-    public String getName() {
-        return name;
-    }
+	public Process(Integer id, String name, Scheduler scheduler, EntitySet fila, double time, Double duration, boolean active) {
+		super(id, name, scheduler, fila, time);
+		this.duration = duration;
+		this.active = active;
+	}
 
-    public Integer getProcessId() {
-        return processId;
-    }
+	public boolean isActive() {
+		return active;
+	}
 
-    public Double getDuration() {
-        return duration;
-    }
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
-    public boolean isActive() {
-        return active;
-    }
+	public Double getDuration() {
+		return duration;
+	}
 
-    public void activate(boolean active) {
-        this.active = active;
-    }
+	public abstract void executeOnStart();
 
-    public abstract void executeOnStart();
+	public abstract void executeOnEnd();
 
-    public abstract void executeOnEnd();
+	public void excute() {
+		// Se tiver ativo e por que ja foi iniciado e esta em delay
+		if (isActive()) {
+			this.executeOnEnd();
+			this.setActive(false);
+			this.getScheduler().reAgendarProcessoProximoCiclo(this.getId());
+		} else {
+			if (deveProcessar()) {
+				this.setActive(true);
+				this.executeOnStart();
+				this.getScheduler().reAgendarProcesso(this.getId(), this.duration);
+			} else {
+				this.getScheduler().reAgendarProcessoProximoCiclo(this.getId());
+			}
+		}
+	}
 
-    public void excute() {
-        this.executeOnStart();
-
-        try {
-            Thread.sleep(duration.longValue());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        this.executeOnEnd();
-    }
-
-    public abstract boolean deveProcessar();
+	public abstract boolean deveProcessar();
 }

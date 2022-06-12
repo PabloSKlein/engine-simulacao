@@ -1,66 +1,66 @@
 package com.unisinos.gb.enginesimulacao.model.entity;
 
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.PetriNet;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.unisinos.gb.enginesimulacao.model.EntitySet;
+import com.unisinos.gb.enginesimulacao.model.PetriNet;
+
 public abstract class Entity {
 
-    private Integer id;
-    private double creationTime;
-    private String name;
-    private Integer priority;
-    private List<EntitySet> entitySetList = new ArrayList<>();
-    private PetriNet petriNet;
+	private Integer id;
+	private double creationTime;
+	private String name;
+	private Integer priority;
+	private List<EntitySet> entitySetList = new ArrayList<>();
+	private PetriNet petriNet;
 
-    protected Entity(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	protected Entity(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public void insertEntitySet(EntitySet entitySet) {
-        entitySetList.add(entitySet);
-    }
+	public void insertEntitySet(EntitySet entitySet) {
+		entitySetList.add(entitySet);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public double getCreationTime() {
-        return creationTime;
-    }
+	public double getCreationTime() {
+		return creationTime;
+	}
 
-    public void setCreationTime(double creationTime) {
-        this.creationTime = creationTime;
-    }
+	public void setCreationTime(double creationTime) {
+		this.creationTime = creationTime;
+	}
 
-    public Integer getPriority() {
-        return priority;
-    }
+	public Integer getPriority() {
+		return priority;
+	}
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
 
-    public double getTimeSinceCreation() {
-        long atual = new Date().getTime();
-        return atual - getCreationTime();
-    }
+	public double getTimeSinceCreation() {
+		long atual = new Date().getTime();
+		return atual - getCreationTime();
+	}
 
 //	public Entity(String name,PetriNet  petriNet) {
 //		this.name = name;

@@ -1,36 +1,30 @@
 package com.unisinos.gb.enginesimulacao.model.event;
 
 import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.Executable;
+import com.unisinos.gb.enginesimulacao.model.Scheduled;
+import com.unisinos.gb.enginesimulacao.model.Scheduler;
 
-public abstract class Event extends Executable {
-    private final Integer eventId;
-    private final String name;
-    private final EntitySet fila;
+public abstract class Event extends Scheduled {
 
-    protected Event(int eventId, String name, EntitySet fila) {
-        this.eventId = eventId;
-        this.name = name;
-        this.fila = fila;
-    }
+	private final EntitySet fila;
+	private double time;
 
-    public String getName() {
-        return name;
-    }
+	public Event(Integer id, String name, Scheduler scheduler, EntitySet fila, double time) {
+		super(id, name, scheduler);
+		this.fila = fila;
+		this.time = time;
+	}
 
-    public Integer getEventId() {
-        return eventId;
-    }
+	public double getTime() {
+		return time;
+	}
 
-    public abstract void  execute();
+	public void setTime(double time) {
+		this.time = time;
+	}
 
-    public EntitySet getFila() {
-        return fila;
-    }
-
-	@Override
-	public String toString() {
-		return "Event [eventId=" + eventId + ", name=" + name +", time="+ this.getTime() + ", fila=" + fila + "] \n";
+	public EntitySet getFila() {
+		return fila;
 	}
 
 }
