@@ -28,4 +28,9 @@ public abstract class Event extends Executable {
         return fila;
     }
 
+	@Override
+	public String toString() {
+		return "Event [eventId=" + eventId + ", name=" + name +", time="+ this.getTime() + ", fila=" + fila + "] \n";
+	}
+
 }

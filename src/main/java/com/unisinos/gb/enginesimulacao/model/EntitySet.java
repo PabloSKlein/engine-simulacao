@@ -1,10 +1,10 @@
 package com.unisinos.gb.enginesimulacao.model;
 
-import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
-import com.unisinos.gb.enginesimulacao.model.entity.Entity;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
+import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 
 /**
  * Representa uma fila.
@@ -54,14 +54,21 @@ public class EntitySet {
 		return entityList.size() == maxPossibleSize;
 	}
 
-	// TODO
 	public double averageTimeInSet() {
-		return 0;
+		double amountOfTime = 0;
+		for (Entity entity : this.entityList) {
+			amountOfTime += entity.getTimeSinceCreation();
+		}
+		return amountOfTime / this.entityList.size();
 	}
 
-	// TODO
 	public double maxTimeInSet() {
-		return 0;
+		double maxTime = 0;
+		for (Entity entity : this.entityList) {
+			if (entity.getTimeSinceCreation() > maxTime)
+				maxTime = entity.getTimeSinceCreation();
+		}
+		return maxTime;
 	}
 
 	// TODO
@@ -105,5 +112,10 @@ public class EntitySet {
 
 	public int getSize() {
 		return this.entityList.size();
+	}
+
+	@Override
+	public String toString() {
+		return "EntitySet [name=" + name + ", id=" + id + ", maxPossibleSize=" + maxPossibleSize + ", entityList=" + entityList + ", mode=" + mode + "]";
 	}
 }

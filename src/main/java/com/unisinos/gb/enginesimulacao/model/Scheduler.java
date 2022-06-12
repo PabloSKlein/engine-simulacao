@@ -1,28 +1,44 @@
 package com.unisinos.gb.enginesimulacao.model;
 
-import com.unisinos.gb.enginesimulacao.model.entity.Entity;
-import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
-import com.unisinos.gb.enginesimulacao.model.event.Event;
-import com.unisinos.gb.enginesimulacao.model.process.Process;
-import com.unisinos.gb.enginesimulacao.model.resources.Resource;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
+import com.unisinos.gb.enginesimulacao.model.entity.Entity;
+import com.unisinos.gb.enginesimulacao.model.event.Chegada;
+import com.unisinos.gb.enginesimulacao.model.event.Event;
+import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.resources.Resource;
+
 public class Scheduler {
 
     private Double time;
     private int id = 0;
+    
+    private int contChegada = 0;
+    private int contSaida = 0;
 
     // Adicionado listas
     private final List<Event> eventosAgendados = new ArrayList<>();
     private final List<Process> processosAgendados = new ArrayList<>();
     private final List<EntitySet> entitySetList = new ArrayList<>();
     private final List<Process> processes = new ArrayList<>();
+    
+    //Inicializa as filas
+    private EntitySet filaBalcao = new EntitySet(this.generateId(), "FILABALCAO", QueueModeEnum.FIFO, 100);
+    private EntitySet filaMesas = new EntitySet(this.generateId(), "FILAMESAS", QueueModeEnum.FIFO, 100);
+    private EntitySet filaCaixa1 = new EntitySet(this.generateId(), "FILACAIXA1", QueueModeEnum.FIFO, 100);
+    private EntitySet filaCaixa2 = new EntitySet(this.generateId(), "FILACAIXA2", QueueModeEnum.FIFO, 100);
+    private EntitySet filaPedido = new EntitySet(this.generateId(), "FILAPEDIDO", QueueModeEnum.FIFO, 100);
 
+    public void criaChegadaFila(double time) {
+    	int id = this.generateId();
+        this.scheduleAt(new Chegada(id, "CHEGADA "+ id, filaCaixa1, filaCaixa2), time);
+    }
+    
     public void addEntitySet(EntitySet entitySet) {
         this.entitySetList.add(entitySet);
     }
@@ -76,7 +92,7 @@ public class Scheduler {
      * explícita
      */
     public void waitFor(long time) {
-
+    	
     }
 
     // controlando tempo de execução ===============================================
@@ -107,15 +123,19 @@ public class Scheduler {
      * um evento e para; insere numa fila e para, etc.
      */
     public void simulateOneStep() {
-
+//    	this.eventosAgendados.get(0).execute();
     }
 
     public void simulateBy(long duration) {
-
+    	while(this.getTime() <= duration) {
+    		// simula
+    	}
     }
 
     public void simulateUntil(long absoluteTime) {
-
+    	while(this.getTime() < absoluteTime) {
+    		// simula
+    	}
     }
 
     // criação, destruição e acesso para componentes
@@ -125,7 +145,13 @@ public class Scheduler {
      * retorna referência para instância de Entity
      */
     public Entity getEntity(Integer id) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	Entity searchedEntity = null;
+        for(EntitySet entitySet : this.entitySetList) {
+        	searchedEntity = entitySet.getEntityList().stream().filter(e -> e.getId() == id.intValue()).findAny().orElse(null);
+        	if(searchedEntity != null)
+        		return searchedEntity;
+        }
+        return null;
     }
 
 
@@ -140,14 +166,14 @@ public class Scheduler {
      * retorna referência para instancia de Process
      */
     public Process getProcess(Integer processId) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+    	return this.processes.stream().filter(p -> p.getProcessId().intValue() == processId.intValue()).findAny().orElse(null);
     }
 
     public Integer createEvent(Event event) {
         return 1;
     }
 
-    public Integer getId() {
+    public Integer generateId() {
         return ++id;
     }
 
@@ -155,14 +181,14 @@ public class Scheduler {
      * retorna referência para instancia de Event
      */
     public Event getEvent(Integer eventId) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+        return this.eventosAgendados.stream().filter(e -> e.getEventId().intValue() == eventId.intValue()).findAny().orElse(null);
     }
 
     /*
      * retorna referência para instancia de EntitySet
      */
     public EntitySet getEntitySet(Integer id) throws Exception {
-        throw new Exception("IMPLEMENTAR");
+        return this.entitySetList.stream().filter(esl -> esl.getId() == id.intValue()).findAny().orElse(null);
     }
 
     // random variates
@@ -174,43 +200,27 @@ public class Scheduler {
         return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
     }
 
-    /*
-     * Retorna uma distribuição exponencial de acordo com a média
-     */
+    
     public double exponential(double meanValue) {
-        double m = (double)1 / meanValue;
-        return m * (Math.exp((-m * (1- new Random().nextDouble()))));
-    }
-    
-    
-    public double testExponential(double meanValue) {
     	double lambda = (double)1/ meanValue;
     	return Math.log((1- new Random().nextDouble()))/(-lambda);
     }
     
-    public List<GrupoCliente> createArrivalByTime(double time) {
-    	List<GrupoCliente> gcList = new ArrayList<>();
+    /**
+     * Cria chegada na fila pelo tempo passado em minutos
+     */
+    public void createArrivalByTime(double time) {
     	for(int i=3;i<=time;i = i+3) {
     		double timeArrival = this.exponential(3);
-    		GrupoCliente gc = this.createGroup();
-    		gc.setCreationTime(timeArrival);
-    		System.out.println(gc);
-    		gcList.add(gc);
+    		this.criaChegadaFila(timeArrival);
     	}
-    	return gcList;
     }
     
     /**
-     * Método de exemplo para retornar um tempo de chegada para um usuário, a cada 3 minutos
-     * a média vai ser 1 fixada pelo fato de estar gerando apenas 1 a cada 3 minutos.
-     * Se fosse gerar por exemplo por uma hora, então a média seria 60/3, e seria necessário
-     * então reduzir de 3 em 3 o 60 e fazer a média e então calcular o horário,
-     * se precisar faço mais adiante.
+     * Cria chegada na fila pelo número de grupo de clientes
      */
-    public GrupoCliente createGroup() {
-    	int idCliente = this.getId();
-    	GrupoCliente gc = new GrupoCliente(idCliente, "Grupo Cliente "+ idCliente);
-    	return gc;
+    public void createArrivalByAmountOfClients(double time) {
+    	this.createArrivalByTime(time * 3);
     }
 
     /**
@@ -227,8 +237,10 @@ public class Scheduler {
     	return this.normal(meanValue, stdDeviationValue, this.getTime());
     }
     
-    public static void main(String[] args) {
-		new Scheduler().createArrivalByTime(60);
+    public static void main(String[] args){
+		Scheduler de = new Scheduler();
+		de.createArrivalByTime(60);
+		System.out.println(de.getEventosAgendados().toString());
 	}
 
     public void addProcess(Process process) {
