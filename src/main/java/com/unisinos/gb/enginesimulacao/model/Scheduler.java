@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
@@ -14,6 +15,11 @@ import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class Scheduler {
+	
+	public static double meanValue = 2;
+	public static double stdDeviationValue = 5;
+	public static double minValue = 1;
+	public static double maxValue = 6;
 
 	private Double time;
 	private static int id = 0;
@@ -74,17 +80,34 @@ public class Scheduler {
 
 	public void startProcessNow(Process process) {
 		process.setTime(time);
-		processosAgendados.add(process);
+//		processosAgendados.add(process);
 	}
 
 	public void startProcessIn(Process process, Double timeToStart) {
 		process.setTime(time + timeToStart);
-		processosAgendados.add(process);
+//		processosAgendados.add(process);
 	}
 
 	public void startProcessAt(Process process, Double absoluteTime) {
 		process.setTime(absoluteTime);
-		processosAgendados.add(process);
+//		processosAgendados.add(process);
+	}
+	
+	public double chooseDistribution(DistributionEnum Denum) {
+		System.out.println(Denum);
+		switch(Denum) {
+		case EXPONENTIAL:
+			return this.exponential(meanValue);
+		case UNIFORM:
+			return this.uniform(minValue, maxValue);
+		case NORMAL:
+			return this.normalScheduler(meanValue, stdDeviationValue);
+		default:
+			System.out.println("invalid option");
+			throw new RuntimeException();
+			break;
+		}
+		return 0;
 	}
 
 	/**
@@ -191,7 +214,7 @@ public class Scheduler {
 	/**
 	 * Retorna uma distribuição uniforme entre o valor minimo e o valor máximo
 	 */
-	public double uniform(Integer minValue, Integer maxValue) throws Exception {
+	public double uniform(Double minValue, Double maxValue) throws Exception {
 		return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
 	}
 
@@ -253,10 +276,12 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
+		
 		Scheduler de = new Scheduler();
 
 		// Cria os eventos de entrada
 		de.createArrivalByTime(60);
+		de.chooseDistribution(DistributionEnum.EXPONENTIAL, 5);
 		System.out.println(de.getEventosAgendados().toString());
 
 	}
