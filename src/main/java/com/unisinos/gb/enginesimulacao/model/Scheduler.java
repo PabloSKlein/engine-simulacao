@@ -281,7 +281,7 @@ public class Scheduler {
 
 		// Cria os eventos de entrada
 		de.createArrivalByTime(60);
-		de.chooseDistribution(DistributionEnum.EXPONENTIAL, 5);
+		de.chooseDistribution(DistributionEnum.EXPONENTIAL);
 		System.out.println(de.getEventosAgendados().toString());
 
 	}
