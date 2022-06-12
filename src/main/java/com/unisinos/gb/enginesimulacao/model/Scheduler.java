@@ -12,6 +12,8 @@ import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
+import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class Scheduler {
@@ -24,7 +26,7 @@ public class Scheduler {
 
 	// Adicionado listas
 	private final List<Event> eventosAgendados = new ArrayList<>();
-//	private final List<Process> processosAgendados = new ArrayList<>();
+	// private final List<Process> processosAgendados = new ArrayList<>();
 	private final List<EntitySet> entitySetList = new ArrayList<>();
 //	private final List<s> processes = new ArrayList<>();
 
@@ -34,7 +36,7 @@ public class Scheduler {
 	private EntitySet filaCaixa1 = new EntitySet(generateId(), "FILA CAIXA 1", QueueModeEnum.FIFO, 100);
 	private EntitySet filaCaixa2 = new EntitySet(generateId(), "FILA CAIXA 2", QueueModeEnum.FIFO, 100);
 	private EntitySet filaPedido = new EntitySet(generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
-	
+
 	public void criaChegadaFila(double time) {
 		int id = this.generateId();
 		this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2), time);
@@ -73,21 +75,6 @@ public class Scheduler {
 		eventosAgendados.add(event);
 	}
 
-//	public void startProcessNow(Process process) {
-//		process.setTime(time);
-//		processosAgendados.add(process);
-//	}
-//
-//	public void startProcessIn(Process process, Double timeToStart) {
-//		process.setTime(time + timeToStart);
-//		processosAgendados.add(process);
-//	}
-//
-//	public void startProcessAt(Process process, Double absoluteTime) {
-//		process.setTime(absoluteTime);
-//		processosAgendados.add(process);
-//	}
-
 	/**
 	 *  se a abordagem para especificação da passagem de tempo nos processos for
 	 * explícita
@@ -103,16 +90,16 @@ public class Scheduler {
 	 * processar (FEL vazia, i.e., lista de eventos futuros vazia)
 	 */
 	public void simulate() {
-		while (!eventosAgendados.isEmpty()) {
-			eventosAgendados.stream().min(Comparator.comparing(Event::getTime)).ifPresent(menorEvento -> {
-				this.time = menorEvento.getTime();
-				menorEvento.execute();
-				eventosAgendados.remove(menorEvento);
-			});
-
-			processes.stream().filter(Process::deveProcessar).forEach(Process::excute);
-		}
-		System.out.println("Todos eventos processados.");
+		/*
+		 * >>>>>>> 6672fb65fb785cf40fc7b378073dba025c2c2249 while
+		 * (!eventosAgendados.isEmpty()) {
+		 * eventosAgendados.stream().min(Comparator.comparing(Event::getTime)).ifPresent
+		 * (menorEvento -> { this.time = menorEvento.getTime(); menorEvento.execute();
+		 * eventosAgendados.remove(menorEvento); });
+		 * 
+		 * processes.stream().filter(Process::deveProcessar).forEach(Process::excute); }
+		 * System.out.println("Todos eventos processados.");
+		 */
 	}
 
 	/*
@@ -158,13 +145,6 @@ public class Scheduler {
 		throw new Exception("IMPLEMENTAR");
 	}
 
-	/*
-	 * retorna referência para instancia de Process
-	 */
-	public Process getProcess(Integer processId) throws Exception {
-		return this.processes.stream().filter(p -> p.getProcessId().intValue() == processId.intValue()).findAny().orElse(null);
-	}
-
 	public Integer createEvent(Event event) {
 		return 1;
 	}
@@ -177,7 +157,7 @@ public class Scheduler {
 	 * retorna referência para instancia de Event
 	 */
 	public Event getEvent(Integer eventId) throws Exception {
-		return this.eventosAgendados.stream().filter(e -> e.getEventId().intValue() == eventId.intValue()).findAny().orElse(null);
+		return this.eventosAgendados.stream().filter(e -> e.getId().intValue() == eventId.intValue()).findAny().orElse(null);
 	}
 
 	/*
@@ -233,10 +213,6 @@ public class Scheduler {
 		return this.normal(meanValue, stdDeviationValue, this.getTime());
 	}
 
-	public void addProcess(Process process) {
-		processes.add(process);
-	}
-
 	public Double getProximoCiclo() {
 		return eventosAgendados.stream().min(Comparator.comparing(Event::getTime)).get().getTime();
 	}
@@ -253,10 +229,21 @@ public class Scheduler {
 		eventProcess.setTime(this.time + time);
 	}
 
+	public Balcao criaBalcao(int i, String nome) {
+		return new Balcao(generateId(), nome, i);
+	}
+
+	public Caixa criaCaixa(String nome, int i) {
+		return new Caixa(generateId(), nome, i);
+	}
+
+	public AtendimentoCaixa criaAtendimento(double time, EntitySet filaCaixa1, EntitySet filaPedido, EntitySet filaBalcao, EntitySet filaMesa, Caixa recursoCaixa1) {
+		var id = generateId();
+		return new AtendimentoCaixa(id, "ATENDIMENTOCAIXA" + id, this, time, 1.0, filaCaixa1, filaPedido, filaBalcao, filaMesa, recursoCaixa1);
+	}
+
 	public static void main(String[] args) {
-		
-		
-		
+
 		Scheduler de = new Scheduler();
 
 		// Cria os eventos de entrada
