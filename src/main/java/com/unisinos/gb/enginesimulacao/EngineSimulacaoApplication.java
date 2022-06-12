@@ -74,20 +74,20 @@ public class EngineSimulacaoApplication {
         for (int i = 0; i < mesas.length; i++) {
             if (group.getQuantidade() == 2) {
                 if (i < 4) {
-                    if (mesas[i].getIsOccupied() == 0) {
-                        mesas[i].setIsOccupied(1);
+                    if (mesas[i].isOccupied()) {
+                        mesas[i].ocupaMesa();
                         achouMesa = true;
                         break;
-                    } else if (mesas[3].getIsOccupied() == 1) {
+                    } else if (!mesas[3].isOccupied()) {
                         achouMesa = false;
                         break;
                     }
                 } else {
-                    if (mesas[i].getIsOccupied() == 0) {
-                        mesas[i].setIsOccupied(1);
+                    if (mesas[i].isOccupied()) {
+                        mesas[i].ocupaMesa();
                         achouMesa = true;
                         break;
-                    } else if (mesas[7].getIsOccupied() == 1) {
+                    } else if (!mesas[7].isOccupied()) {
                         achouMesa = false;
                         break;
                     }
