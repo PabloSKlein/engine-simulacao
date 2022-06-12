@@ -24,14 +24,14 @@ public class EngineSimulacaoApplication {
         var filaPedido = new EntitySet(de.getId(), "FILAPEDIDO", QueueModeEnum.FIFO, 10);
 
         //Inicializa os recursos de balcão e de mesas
-        /*Balcao balcao = new Balcao(de.getId(),'BALCAO', 6);
-        Mesa[] mesas = new Mesa[8];
+        var balcao = new Balcao(de.getId(),'BALCAO', 6);
+        var mesas = new Mesa[8];
         for (int i = 0; i< mesas.length;i++){
             if(i < 4)
                 mesas[i] = new Mesa(de.getId(), "MESA " + i,2);
             else
                 mesas[i] = new Mesa(de.getId(), "MESA " + i,4);
-        }*/
+        }
 
         //para fins de log
         de.addEntitySet(filaCaixa1);
@@ -58,20 +58,12 @@ public class EngineSimulacaoApplication {
         de.scheduleAt(new Chegada(de.getId(), "CHEGADA", filaCaixa1, filaCaixa2), time);
     }
 
-    /*private static void vaiProBlacãoOuMesa(EntitySet filaBalcao, EntitySet filaMesas, Balcao balcao, Mesa[] mesas,GroupClient group){
-        boolean achouMesa = false;
-        boolean achouBanco = false;
-        if(group.quantidade>=2)
-            temMesa(mesas,achouMesa, group);
+    private static void vaiProBlacãoOuMesa(EntitySet filaBalcao, EntitySet filaMesas, Balcao balcao, Mesa[] mesas,GroupClient group) {
+        boolean achouMesa = achouBanco = false;
+        if (group.quantidade >= 2)
+            temMesa(mesas, achouMesa, group, filaMesas);
         else
-            temBalcao(balcao,achouBanco,group);
-
-        if(!achouMesa){
-            filaMesas.inset(group);
-        }
-        if(!achouBanco){
-            filaBalcao.insert(group);
-
+            temBalcao(balcao, achouBanco, group, filaBalcao);
     }
 
     private static void temMesa(Mesa[] mesas, int achouMesa, Group group) {
@@ -98,12 +90,19 @@ public class EngineSimulacaoApplication {
                 }
             }
         }
+
+        if (!achouMesa) {
+            filaMesas.inset(group);
+        }
     }
 
-    private static void temBalcao(Balcao balcao, int achouBanco, Group group){
+    private static void temBalcao(Balcao balcao, int achouBanco, Group group, EntitySet filaBanco){
         if(balcao.isOccupied() == false){
             balcao.ocupaBanco();
+            //Faço o que com o grupo de pessoas?
             achouBanco = true;
+        }else{
+            filaBalcao.insert(group);
         }
-    }}*/
-}
+    }
+
