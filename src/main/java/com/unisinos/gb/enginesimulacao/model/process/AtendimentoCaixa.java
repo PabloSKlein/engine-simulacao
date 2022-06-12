@@ -5,6 +5,7 @@ import com.unisinos.gb.enginesimulacao.model.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
+import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class AtendimentoCaixa extends Process {
@@ -14,21 +15,21 @@ public class AtendimentoCaixa extends Process {
 	private final EntitySet filaMesa;
 	private final EntitySet filaBalcao;
 	private Entity entity;
-	private final Resource resource;
+	private final Resource caixaRecurso;
 
 	public AtendimentoCaixa(Integer id, String name, Scheduler scheduler, double time, Double duration, EntitySet filaCaixa, EntitySet filaPedido,
-			EntitySet filaMesa, EntitySet filaBalcao, Resource resource) {
+			EntitySet filaMesa, EntitySet filaBalcao, Caixa recursoCaixa) {
 		super(id, name, scheduler, time, duration, false);
 		this.filaCaixa = filaCaixa;
 		this.filaPedido = filaPedido;
 		this.filaMesa = filaMesa;
 		this.filaBalcao = filaBalcao;
-		this.resource = resource;
+		this.caixaRecurso = recursoCaixa;
 	}
 
 	@Override
 	public void executeOnStart() {
-		resource.allocate();
+		caixaRecurso.allocate();
 		this.entity = filaCaixa.remove();
 	}
 
@@ -37,7 +38,7 @@ public class AtendimentoCaixa extends Process {
 		filaPedido.insert(new Pedido((GrupoCliente) this.entity));
 		// filaMesaOuCaixa.insert(this.entity);
 
-		resource.release();
+		caixaRecurso.release();
 	}
 
 	public Entity getEntity() {
@@ -65,11 +66,11 @@ public class AtendimentoCaixa extends Process {
 	}
 
 	public Resource getResource() {
-		return resource;
+		return caixaRecurso;
 	}
 
 	@Override
 	public boolean deveProcessar() {
-		return resource.podeAlocarRecurso() && !filaCaixa.isEmpty();
+		return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
 	}
 }

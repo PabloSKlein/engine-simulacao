@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
-import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
@@ -37,10 +36,19 @@ public class Scheduler {
 	private EntitySet filaCaixa2 = new EntitySet(generateId(), "FILA CAIXA 2", QueueModeEnum.FIFO, 100);
 	private EntitySet filaPedido = new EntitySet(generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
 
-	public void criaChegadaFila(double time) {
-		int id = this.generateId();
-		this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2), time);
-	}
+	// Recursos
+	private Caixa caixa1 = criaCaixa("Caixa 1", 1);
+	private Caixa caixa2 = criaCaixa("Caixa 2", 1);
+
+	// Processos
+	private Process atendimentoCaixa1 = criaAtendimento(0.0, filaCaixa1, filaPedido, filaBalcao, filaMesas, caixa1);
+	private Process atendimentoCaixa2 = criaAtendimento(0.0, filaCaixa2, filaPedido, filaBalcao, filaMesas, caixa2);
+
+	// public void criaChegadaFila(double time) {
+	// int id = this.generateId();
+	// this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2),
+	// time);
+	// }
 
 	public void addEntitySet(EntitySet entitySet) {
 		this.entitySetList.add(entitySet);
@@ -239,7 +247,7 @@ public class Scheduler {
 
 	public AtendimentoCaixa criaAtendimento(double time, EntitySet filaCaixa1, EntitySet filaPedido, EntitySet filaBalcao, EntitySet filaMesa, Caixa recursoCaixa1) {
 		var id = generateId();
-		return new AtendimentoCaixa(id, "ATENDIMENTOCAIXA" + id, this, time, 1.0, filaCaixa1, filaPedido, filaBalcao, filaMesa, recursoCaixa1);
+		return new AtendimentoCaixa(id, "ATENDIMENTO CAIXA" + id, this, time, 1.0, filaCaixa1, filaPedido, filaBalcao, filaMesa, recursoCaixa1);
 	}
 
 	public static void main(String[] args) {
