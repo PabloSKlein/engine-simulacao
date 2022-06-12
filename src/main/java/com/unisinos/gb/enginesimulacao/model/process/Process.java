@@ -1,30 +1,33 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
-import com.unisinos.gb.enginesimulacao.model.Scheduler;
+import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 
 public abstract class Process extends Event {
 
-	private DistributionEnum enumDuration;
+	private final DistributionEnum distributionEnum;
 	private boolean active;
 
-	public Process(Integer id, String name, Scheduler scheduler, double time, boolean active, DistributionEnum enumDuration) {
-		super(id, name, scheduler, time);
-		this.enumDuration = enumDuration;
-		this.active = active;
+	protected Process(Integer id, String name, Scheduler scheduler,  DistributionEnum distributionEnum) {
+		super(id, name, scheduler, 1.0);
+		this.distributionEnum = distributionEnum;
+		this.active = false;
 	}
 
 	public boolean isActive() {
 		return active;
 	}
 
+	public abstract double getMin();
+	public abstract double getMax();
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
 	public Double getDuration() {
-		return this.getScheduler().chooseDistribution(enumDuration);
+		return distributionEnum.getDistribution(getMin(), getMax());
 	}
 
 	public abstract void executeOnStart();

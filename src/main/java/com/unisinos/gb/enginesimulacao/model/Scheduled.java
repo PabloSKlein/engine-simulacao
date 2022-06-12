@@ -1,5 +1,7 @@
 package com.unisinos.gb.enginesimulacao.model;
 
+import com.unisinos.gb.enginesimulacao.engine.Scheduler;
+
 public abstract class Scheduled {
 	private final Integer id;
 	private final String name;

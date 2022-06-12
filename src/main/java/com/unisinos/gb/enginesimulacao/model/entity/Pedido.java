@@ -4,13 +4,8 @@ public class Pedido extends Entity {
 
     private final GrupoCliente grupoCliente;
 
-    public Pedido(Integer id, String name, GrupoCliente grupoCliente) {
-        super(id, name);
-        this.grupoCliente = grupoCliente;
-    }
-
-    public Pedido(GrupoCliente grupoCliente) {
-        super(1, "PEDIDO");
+    public Pedido(int id, GrupoCliente grupoCliente) {
+        super(id, "PEDIDO" + id);
         this.grupoCliente = grupoCliente;
     }
 }
