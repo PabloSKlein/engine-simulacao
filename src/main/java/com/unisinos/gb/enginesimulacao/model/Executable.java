@@ -10,4 +10,9 @@ public abstract class Executable {
     public void setTime(double time) {
         this.time = time;
     }
+
+	@Override
+	public String toString() {
+		return "Executable [time=" + time + "]";
+	}
 }

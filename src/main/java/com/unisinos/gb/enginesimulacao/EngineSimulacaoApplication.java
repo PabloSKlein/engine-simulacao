@@ -16,12 +16,7 @@ public class EngineSimulacaoApplication {
 
         var de = new Scheduler();
 
-        //Inicializa as filas
-        var filaBalcao = new EntitySet(de.getId(), "FILABALCAO", QueueModeEnum.FIFO, 10);
-        var filaMesas = new EntitySet(de.getId(), "FILAMESAS", QueueModeEnum.FIFO, 10);
-        var filaCaixa1 = new EntitySet(de.getId(), "FILACAIXA1", QueueModeEnum.FIFO, 10);
-        var filaCaixa2 = new EntitySet(de.getId(), "FILACAIXA2", QueueModeEnum.FIFO, 10);
-        var filaPedido = new EntitySet(de.getId(), "FILAPEDIDO", QueueModeEnum.FIFO, 10);
+       
 
         //Inicializa os recursos de balcão e de mesas
         var balcao = new Balcao(de.getId(),'BALCAO', 6);
@@ -40,8 +35,11 @@ public class EngineSimulacaoApplication {
         de.addEntitySet(filaBalcao);
         de.addEntitySet(filaMesas);
 
-        new ArrayList<>(List.of(0.000997185, 0.009546665, 0.010303237))
-                .forEach(it -> criaChegadaFila(de, filaCaixa1, filaCaixa2, it));
+//        new ArrayList<>(List.of(0.000997185, 0.009546665, 0.010303237))
+//                .forEach(it -> criaChegadaFila(de, filaCaixa1, filaCaixa2, it));
+        
+        //Criação de chegadas na fila
+        de.createArrivalByTime(60);
 
         var recursoCaixa1 = new Caixa(de.getId(), "CAIXA1", 1);
         var recursoCaixa2 = new Caixa(de.getId(), "CAIXA2", 1);
@@ -54,9 +52,7 @@ public class EngineSimulacaoApplication {
         de.simulate();
     }
 
-    private static void criaChegadaFila(Scheduler de, EntitySet filaCaixa1, EntitySet filaCaixa2, double time) {
-        de.scheduleAt(new Chegada(de.getId(), "CHEGADA", filaCaixa1, filaCaixa2), time);
-    }
+    
 
     private static void vaiProBlacãoOuMesa(EntitySet filaBalcao, EntitySet filaMesas, Balcao balcao, Mesa[] mesas,GroupClient group) {
         boolean achouMesa = achouBanco = false;
