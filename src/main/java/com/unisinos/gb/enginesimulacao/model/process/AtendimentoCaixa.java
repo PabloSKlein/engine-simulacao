@@ -16,9 +16,9 @@ public class AtendimentoCaixa extends Process {
 	private Entity entity;
 	private final Resource resource;
 
-	public AtendimentoCaixa(Integer id, String name, Scheduler scheduler, double time, Double duration, boolean active, EntitySet filaCaixa, EntitySet filaPedido,
+	public AtendimentoCaixa(Integer id, String name, Scheduler scheduler, double time, Double duration, EntitySet filaCaixa, EntitySet filaPedido,
 			EntitySet filaMesa, EntitySet filaBalcao, Resource resource) {
-		super(id, name, scheduler, time, duration, active);
+		super(id, name, scheduler, time, duration, false);
 		this.filaCaixa = filaCaixa;
 		this.filaPedido = filaPedido;
 		this.filaMesa = filaMesa;
