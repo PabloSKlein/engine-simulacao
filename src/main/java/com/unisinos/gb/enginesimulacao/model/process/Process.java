@@ -1,16 +1,17 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
+import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 
 public abstract class Process extends Event {
 
-	private final Double duration;
+	private DistributionEnum enumDuration;
 	private boolean active;
 
-	public Process(Integer id, String name, Scheduler scheduler, double time, Double duration, boolean active) {
+	public Process(Integer id, String name, Scheduler scheduler, double time, boolean active, DistributionEnum enumDuration) {
 		super(id, name, scheduler, time);
-		this.duration = duration;
+		this.enumDuration = enumDuration;
 		this.active = active;
 	}
 
@@ -23,7 +24,7 @@ public abstract class Process extends Event {
 	}
 
 	public Double getDuration() {
-		return duration;
+		return this.getScheduler().chooseDistribution(enumDuration);
 	}
 
 	public abstract void executeOnStart();
@@ -40,7 +41,7 @@ public abstract class Process extends Event {
 			if (deveProcessar()) {
 				this.setActive(true);
 				this.executeOnStart();
-				this.getScheduler().reAgendarProcesso(this.getId(), this.duration);
+				this.getScheduler().reAgendarProcesso(this.getId(), getDuration());
 			} else {
 				this.getScheduler().reAgendarProcessoProximoCiclo(this.getId());
 			}
