@@ -10,6 +10,7 @@ import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
+import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
@@ -33,7 +34,7 @@ public class Scheduler {
 	private EntitySet filaCaixa1 = new EntitySet(generateId(), "FILA CAIXA 1", QueueModeEnum.FIFO, 100);
 	private EntitySet filaCaixa2 = new EntitySet(generateId(), "FILA CAIXA 2", QueueModeEnum.FIFO, 100);
 	private EntitySet filaPedido = new EntitySet(generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
-
+	
 	public void criaChegadaFila(double time) {
 		int id = this.generateId();
 		this.scheduleAt(new Chegada(id, "CHEGADA " + id, filaCaixa1, filaCaixa2), time);
@@ -72,20 +73,20 @@ public class Scheduler {
 		eventosAgendados.add(event);
 	}
 
-	public void startProcessNow(Process process) {
-		process.setTime(time);
-		processosAgendados.add(process);
-	}
-
-	public void startProcessIn(Process process, Double timeToStart) {
-		process.setTime(time + timeToStart);
-		processosAgendados.add(process);
-	}
-
-	public void startProcessAt(Process process, Double absoluteTime) {
-		process.setTime(absoluteTime);
-		processosAgendados.add(process);
-	}
+//	public void startProcessNow(Process process) {
+//		process.setTime(time);
+//		processosAgendados.add(process);
+//	}
+//
+//	public void startProcessIn(Process process, Double timeToStart) {
+//		process.setTime(time + timeToStart);
+//		processosAgendados.add(process);
+//	}
+//
+//	public void startProcessAt(Process process, Double absoluteTime) {
+//		process.setTime(absoluteTime);
+//		processosAgendados.add(process);
+//	}
 
 	/**
 	 *  se a abordagem para especificação da passagem de tempo nos processos for
@@ -253,6 +254,9 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
+		
+		
+		
 		Scheduler de = new Scheduler();
 
 		// Cria os eventos de entrada
