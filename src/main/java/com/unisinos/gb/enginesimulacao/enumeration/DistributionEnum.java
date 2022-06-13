@@ -50,7 +50,7 @@ public enum DistributionEnum {
 	    if (places < 0) throw new IllegalArgumentException();
 
 	    BigDecimal bd = BigDecimal.valueOf(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    bd = bd.setScale(places, RoundingMode.HALF_DOWN);
 	    return bd.doubleValue();
 	}
 
