@@ -27,6 +27,8 @@ public abstract class Process extends Event {
 	public abstract Double getStdDeviation();
 
 	public abstract Double getMean();
+	
+	public abstract Double getTimeScheduler();
 
 	public void setActive(boolean active) {
 		this.active = active;
@@ -37,7 +39,7 @@ public abstract class Process extends Event {
 	}
 
 	public Double getDuration() {
-		return distributionEnum.getDistribution(getMin(), getMax(), getMean(), getStdDeviation());
+		return distributionEnum.getDistribution(getMin(), getMax(), getMean(), getStdDeviation(), getTimeScheduler());
 	}
 
 	protected abstract void executeOnStart();

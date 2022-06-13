@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public enum DistributionEnum {
 	UNIFORM(1) {
 		@Override
-		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue) {
+		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue, Double time) {
 			if (minValue == null || maxValue == null) {
 				throw new RuntimeException("min e max Obrigatórios");
 			}
@@ -16,16 +16,16 @@ public enum DistributionEnum {
 		}
 	},
 	NORMAL(2) {
-		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue) {
-			if (meanValue == null || stdDeviationValue == null) {
+		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue, Double time) {
+			if (meanValue == null || stdDeviationValue == null || time == null) {
 				throw new RuntimeException("mean e stdDeviation Obrigatórios");
 			}
-			return this.normal(meanValue, stdDeviationValue);
+			return this.normal(meanValue, stdDeviationValue, time);
 		}
 	},
 	EXPONENTIAL(3) {
 		@Override
-		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue) {
+		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue, Double time) {
 			if (meanValue == null) {
 				throw new RuntimeException("mean Obrigatórios");
 			}
@@ -40,7 +40,7 @@ public enum DistributionEnum {
 		this.key = key;
 	}
 
-	public abstract double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue);
+	public abstract double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue, Double time);
 
 	public int getKey() {
 		return this.key;
@@ -63,7 +63,7 @@ public enum DistributionEnum {
 		return round(Math.log((1 - new Random().nextDouble())) / (-lambda), number_decimals);
 	}
 
-	protected double normal(Double meanValue, Double stdDeviationValue) {
-		return round(meanValue / stdDeviationValue, number_decimals);
+	protected double normal(Double meanValue, Double stdDeviationValue, Double time) {
+		return round(Math.abs((time - meanValue) / stdDeviationValue), number_decimals);
 	}
 }
