@@ -1,6 +1,6 @@
 package com.unisinos.gb.enginesimulacao.model.event;
 
-import com.unisinos.gb.enginesimulacao.model.Scheduled;
+import com.unisinos.gb.enginesimulacao.engine.Scheduled;
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 
 public abstract class Event extends Scheduled {

@@ -1,10 +1,9 @@
-package com.unisinos.gb.enginesimulacao.model;
+package com.unisinos.gb.enginesimulacao.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
-import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 
 /**
  * Representa uma fila.

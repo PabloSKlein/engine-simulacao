@@ -2,8 +2,8 @@ package com.unisinos.gb.enginesimulacao.model.process;
 
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
+import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;

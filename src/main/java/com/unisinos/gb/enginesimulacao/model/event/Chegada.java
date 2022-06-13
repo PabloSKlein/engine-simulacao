@@ -1,7 +1,7 @@
 package com.unisinos.gb.enginesimulacao.model.event;
 
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
+import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 
 public class Chegada extends Event {

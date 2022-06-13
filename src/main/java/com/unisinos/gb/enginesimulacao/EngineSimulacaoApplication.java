@@ -3,7 +3,7 @@ package com.unisinos.gb.enginesimulacao;
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
+import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;

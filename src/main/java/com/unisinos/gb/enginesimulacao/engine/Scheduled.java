@@ -1,6 +1,4 @@
-package com.unisinos.gb.enginesimulacao.model;
-
-import com.unisinos.gb.enginesimulacao.engine.Scheduler;
+package com.unisinos.gb.enginesimulacao.engine;
 
 public abstract class Scheduled {
 	private final Integer id;

@@ -1,6 +1,6 @@
 package com.unisinos.gb.enginesimulacao.engine;
 
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
+import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 
