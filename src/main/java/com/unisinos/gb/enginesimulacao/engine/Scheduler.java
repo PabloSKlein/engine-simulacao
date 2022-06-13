@@ -20,6 +20,7 @@ public class Scheduler {
 	private Double tempo = 0.0;
 	private int id = 0;
 
+	private int contCiclos = 0;
 	private int contChegada = 0;
 	private int contSaida = 0;
 
@@ -58,17 +59,33 @@ public class Scheduler {
 
 	public void startProcessNow(Process process) {
 		process.setTime(tempo);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
 	}
 
 	public void startProcessIn(Process process, Double timeToStart) {
 		process.setTime(tempo + timeToStart);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
 	}
 
 	public void startProcessAt(Process process, Double absoluteTime) {
 		process.setTime(absoluteTime);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
+	}
+
+	public void printLog() {
+		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + "=========================");
+		// Filas
+		StringBuilder stb = new StringBuilder();
+		this.entitySetList.forEach(lista -> {
+			stb.append(lista.getName() + " -> \t");
+			lista.getEntityList().forEach(es -> {
+				stb.append("|");
+			});
+			stb.append(" (" + lista.getEntityList().size() + ") ");
+			stb.append("\n");
+		});
+		stb.append("\n");
+		System.out.println(stb);
 	}
 
 	/**
@@ -86,7 +103,10 @@ public class Scheduler {
 	 * processar (FEL vazia, i.e., lista de eventos futuros vazia)
 	 */
 	public void simulate() {
+		printLog();
+		this.contCiclos++;
 		while (!eventosAgendados.isEmpty()) {
+			System.out.println(this.tempo);
 			var proximoCiclo = getProximoCiclo();
 			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).collect(Collectors.toList());
 			eventosDoCiclo.forEach(menorEvento -> {
@@ -95,6 +115,7 @@ public class Scheduler {
 				if (!(menorEvento instanceof Process)) {
 					eventosAgendados.remove(menorEvento);
 				}
+				printLog();
 			});
 			this.tempo = proximoCiclo;
 		}
@@ -168,6 +189,7 @@ public class Scheduler {
 			throw new RuntimeException("Event " + eventProcess.getId() + " Nao e processo!!");
 		}
 		eventProcess.setTime(this.tempo + time);
-		eventosAgendados.add(eventProcess);
+		// Comentado metodo add pois pois colocado bloqueio de remoção no simulate()
+		// eventosAgendados.add(eventProcess);
 	}
 }
