@@ -6,6 +6,12 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum DistributionEnum {
+	NONE(0) {
+		@Override
+		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue) {
+			return 0.0;
+		}
+	},
 	UNIFORM(1) {
 		@Override
 		public double getDistribution(Double minValue, Double maxValue, Double meanValue, Double stdDeviationValue) {
