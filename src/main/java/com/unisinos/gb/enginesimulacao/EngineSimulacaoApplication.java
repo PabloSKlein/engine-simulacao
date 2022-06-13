@@ -1,5 +1,7 @@
 package com.unisinos.gb.enginesimulacao;
 
+import java.util.Arrays;
+
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
@@ -7,8 +9,6 @@ import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
-
-import java.util.Arrays;
 
 public class EngineSimulacaoApplication {
 	static final Scheduler de = new Scheduler();
@@ -21,7 +21,7 @@ public class EngineSimulacaoApplication {
 		var filaCaixa2 = new EntitySet(de.generateId(), "FILA CAIXA2", QueueModeEnum.FIFO, 100);
 		var filaPedido = new EntitySet(de.generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
 		var filaBalcao = new EntitySet(de.generateId(), "FILA BALCAO", QueueModeEnum.FIFO, 100);
-		var filaMesas = new EntitySet(de.generateId(), "FILA MESAS", QueueModeEnum.FIFO, 100);
+		var filaMesas = new EntitySet(de.generateId(), "FILA MESAS ", QueueModeEnum.FIFO, 100);
 		adicionaFilasNoSchedulerParaLog(filaCaixa1, filaCaixa2, filaPedido, filaBalcao, filaMesas);
 
 		// Recursos
@@ -44,12 +44,11 @@ public class EngineSimulacaoApplication {
 
 	private static void criaProcessosNoTempoZero(AtendimentoCaixa... processos) {
 		Arrays.stream(processos).forEach(processo -> de.scheduleAt(processo, TEMPO_INICIAL_SISTEMA));
-		;
 	}
 
 	public static void criaChegadaPeloTempo(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
 		for (int i = 3; i <= time; i = i + 3) {
-			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(0.0, 3.0);
+			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(null, null, 3.0, null);
 			criaChegada(timeArrival, filaCaixa1, filaCaixa2);
 		}
 	}

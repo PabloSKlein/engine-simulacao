@@ -73,7 +73,7 @@ public class Scheduler {
 	}
 
 	public void printLog() {
-		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + "=========================");
+		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + " =========================");
 		// Filas
 		StringBuilder stb = new StringBuilder();
 		this.entitySetList.forEach(lista -> {
@@ -106,7 +106,6 @@ public class Scheduler {
 		printLog();
 		this.contCiclos++;
 		while (!eventosAgendados.isEmpty()) {
-			System.out.println(this.tempo);
 			var proximoCiclo = getProximoCiclo();
 			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).collect(Collectors.toList());
 			eventosDoCiclo.forEach(menorEvento -> {
@@ -115,8 +114,8 @@ public class Scheduler {
 				if (!(menorEvento instanceof Process)) {
 					eventosAgendados.remove(menorEvento);
 				}
-				printLog();
 			});
+			printLog();
 			this.tempo = proximoCiclo;
 		}
 		System.out.println("Todos eventos processados.");

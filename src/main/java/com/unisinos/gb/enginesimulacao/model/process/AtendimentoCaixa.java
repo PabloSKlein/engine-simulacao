@@ -11,47 +11,56 @@ import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class AtendimentoCaixa extends Process {
 
-    private final EntitySet filaCaixa;
-    private final EntitySet filaPedido;
-    private final EntitySet filaMesa;
-    private final EntitySet filaBalcao;
-    private final Resource caixaRecurso;
-    private Entity entity;
+	private final EntitySet filaCaixa;
+	private final EntitySet filaPedido;
+	private final EntitySet filaMesa;
+	private final EntitySet filaBalcao;
+	private final Resource caixaRecurso;
+	private Entity entity;
 
-    public AtendimentoCaixa(Integer id, Scheduler scheduler, EntitySet filaCaixa, EntitySet filaPedido, EntitySet filaMesa,
-                            EntitySet filaBalcao, Caixa recursoCaixa) {
-        super(id, "ATENDIMENTOCAIXA" + id, scheduler, DistributionEnum.EXPONENTIAL);
-        this.filaCaixa = filaCaixa;
-        this.filaPedido = filaPedido;
-        this.filaMesa = filaMesa;
-        this.filaBalcao = filaBalcao;
-        this.caixaRecurso = recursoCaixa;
-    }
+	public AtendimentoCaixa(Integer id, Scheduler scheduler, EntitySet filaCaixa, EntitySet filaPedido, EntitySet filaMesa, EntitySet filaBalcao, Caixa recursoCaixa) {
+		super(id, "ATENDIMENTOCAIXA" + id, scheduler, DistributionEnum.EXPONENTIAL);
+		this.filaCaixa = filaCaixa;
+		this.filaPedido = filaPedido;
+		this.filaMesa = filaMesa;
+		this.filaBalcao = filaBalcao;
+		this.caixaRecurso = recursoCaixa;
+	}
 
-    @Override
-    public double getMin() {
-        return 0;
-    }
+	@Override
+	public Double getMin() {
+		return null;
+	}
 
-    @Override
-    public double getMax() {
-        return 3;
-    }
+	@Override
+	public Double getMax() {
+		return null;
+	}
 
-    @Override
-    public void executeOnStart() {
-        caixaRecurso.allocate();
-        this.entity = filaCaixa.remove();
-    }
+	@Override
+	public Double getMean() {
+		return 8.0;
+	}
 
-    @Override
-    public void executeOnEnd() {
-        filaPedido.insert(new Pedido(getScheduler().generateId(), (GrupoCliente) this.entity));
-        caixaRecurso.release();
-    }
+	@Override
+	public Double getStdDeviation() {
+		return 2.0;
+	}
 
-    @Override
-    public boolean deveProcessar() {
-        return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
-    }
+	@Override
+	public void executeOnStart() {
+		caixaRecurso.allocate();
+		this.entity = filaCaixa.remove();
+	}
+
+	@Override
+	public void executeOnEnd() {
+		filaPedido.insert(new Pedido(getScheduler().generateId(), (GrupoCliente) this.entity));
+		caixaRecurso.release();
+	}
+
+	@Override
+	public boolean deveProcessar() {
+		return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
+	}
 }
