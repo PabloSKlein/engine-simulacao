@@ -1,8 +1,9 @@
 package com.unisinos.gb.enginesimulacao.model.entity;
 
-public class AtendenteCaixa extends Entity {
+import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 
-    public AtendenteCaixa(String name, int id) {
-        super(id, name);
+public class AtendenteCaixa extends Entity {
+    public AtendenteCaixa(int id) {
+        super(id, "ATENDENTECAIXA" + id);
     }
 }
