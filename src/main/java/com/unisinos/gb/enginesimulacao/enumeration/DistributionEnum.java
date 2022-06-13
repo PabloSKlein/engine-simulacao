@@ -1,5 +1,7 @@
 package com.unisinos.gb.enginesimulacao.enumeration;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,6 +34,7 @@ public enum DistributionEnum {
 	};
 
 	private final int key;
+	public static final int number_decimals = 2;
 
 	DistributionEnum(int key) {
 		this.key = key;
@@ -42,17 +45,25 @@ public enum DistributionEnum {
 	public int getKey() {
 		return this.key;
 	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = BigDecimal.valueOf(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
 
 	protected double uniform(Double minValue, Double maxValue) {
-		return ThreadLocalRandom.current().nextDouble(minValue, maxValue);
+		return round(ThreadLocalRandom.current().nextDouble(minValue, maxValue), number_decimals);
 	}
 
 	protected double exponential(double meanValue) {
 		double lambda = (double) 1 / meanValue;
-		return Math.log((1 - new Random().nextDouble())) / (-lambda);
+		return round(Math.log((1 - new Random().nextDouble())) / (-lambda), number_decimals);
 	}
 
 	protected double normal(Double meanValue, Double stdDeviationValue) {
-		return meanValue / stdDeviationValue;
+		return round(meanValue / stdDeviationValue, number_decimals);
 	}
 }
