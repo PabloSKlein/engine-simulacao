@@ -57,4 +57,9 @@ public abstract class Process extends Event {
 	}
 
 	public abstract boolean deveProcessar();
+
+	@Override
+	public String toString() {
+		return "PROCESSO (" + this.getName() + ") -> " + "ATIVO: " + isActive() + " DELAY: " + getDuration() + " DISTIBUIÇÃO: " + distributionEnum;
+	}
 }

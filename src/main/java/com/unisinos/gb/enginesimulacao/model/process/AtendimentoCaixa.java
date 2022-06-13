@@ -19,7 +19,7 @@ public class AtendimentoCaixa extends Process {
 	private Entity entity;
 
 	public AtendimentoCaixa(Integer id, Scheduler scheduler, EntitySet filaCaixa, EntitySet filaPedido, EntitySet filaMesa, EntitySet filaBalcao, Caixa recursoCaixa) {
-		super(id, "ATENDIMENTOCAIXA" + id, scheduler, DistributionEnum.EXPONENTIAL);
+		super(id, "ATENDIMENTOCAIXA" + id, scheduler, DistributionEnum.NORMAL);
 		this.filaCaixa = filaCaixa;
 		this.filaPedido = filaPedido;
 		this.filaMesa = filaMesa;
@@ -63,4 +63,5 @@ public class AtendimentoCaixa extends Process {
 	public boolean deveProcessar() {
 		return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
 	}
+
 }

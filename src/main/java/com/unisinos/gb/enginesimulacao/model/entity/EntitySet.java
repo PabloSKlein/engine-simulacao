@@ -115,6 +115,6 @@ public class EntitySet {
 
 	@Override
 	public String toString() {
-		return "EntitySet [name=" + name + ", id=" + id + ", maxPossibleSize=" + maxPossibleSize + ", entityList=" + entityList + ", mode=" + mode + "]";
+		return "FILA (" + this.getName() + ") -> " + "|".repeat(getSize()) + " (" + getSize() + ")";
 	}
 }

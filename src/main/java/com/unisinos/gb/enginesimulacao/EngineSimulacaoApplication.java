@@ -17,11 +17,11 @@ public class EngineSimulacaoApplication {
 	public static void main(String[] args) {
 
 		// Inicializa as filas
-		var filaCaixa1 = new EntitySet(de.generateId(), "FILA CAIXA1", QueueModeEnum.FIFO, 100);
-		var filaCaixa2 = new EntitySet(de.generateId(), "FILA CAIXA2", QueueModeEnum.FIFO, 100);
-		var filaPedido = new EntitySet(de.generateId(), "FILA PEDIDO", QueueModeEnum.FIFO, 100);
-		var filaBalcao = new EntitySet(de.generateId(), "FILA BALCAO", QueueModeEnum.FIFO, 100);
-		var filaMesas = new EntitySet(de.generateId(), "FILA MESAS ", QueueModeEnum.FIFO, 100);
+		var filaCaixa1 = new EntitySet(de.generateId(), "CAIXA1", QueueModeEnum.FIFO, 100);
+		var filaCaixa2 = new EntitySet(de.generateId(), "CAIXA2", QueueModeEnum.FIFO, 100);
+		var filaPedido = new EntitySet(de.generateId(), "PEDIDO", QueueModeEnum.FIFO, 100);
+		var filaBalcao = new EntitySet(de.generateId(), "BALCAO", QueueModeEnum.FIFO, 100);
+		var filaMesas = new EntitySet(de.generateId(), "MESAS ", QueueModeEnum.FIFO, 100);
 		adicionaFilasNoSchedulerParaLog(filaCaixa1, filaCaixa2, filaPedido, filaBalcao, filaMesas);
 
 		// Recursos
