@@ -8,6 +8,7 @@ public abstract class Process extends Event {
 
 	private final DistributionEnum distributionEnum;
 	private boolean active;
+	private Double durationTime = 0.0;
 
 	protected Process(Integer id, String name, Scheduler scheduler, DistributionEnum distributionEnum) {
 		super(id, name, scheduler, 1.0);
@@ -36,7 +37,7 @@ public abstract class Process extends Event {
 		return distributionEnum;
 	}
 
-	public Double getDuration() {
+	private Double getDuration() {
 		return distributionEnum.getDistribution(getMin(), getMax(), getMean(), getStdDeviation());
 	}
 
@@ -50,12 +51,12 @@ public abstract class Process extends Event {
 		if (isActive()) {
 			this.executeOnEnd();
 			this.setActive(false);
-			this.getScheduler().reAgendarProcessoProximoCiclo(this.getId());
 		} else {
 			if (deveProcessar()) {
 				this.setActive(true);
 				this.executeOnStart();
-				this.getScheduler().reAgendarProcesso(this.getId(), getDuration());
+				this.durationTime = getDuration();
+				this.getScheduler().reAgendarProcesso(this.getId(), this.durationTime);
 				this.renewPriority();
 			} else {
 				// Verifica se é para desativar
@@ -73,8 +74,7 @@ public abstract class Process extends Event {
 
 	@Override
 	public String toString() {
-		return "PROCESSO (" + this.getName() + ") -> " + (isActive() ? "ATIVO   " : "INATIVO ")
-				+ (isActive() ? "(DELAY: " + getDuration() + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")") + "\t\t\t(TEMPO: " + this.getTempo()
-				+ ")";
+		return "PROCESSO (" + this.getName() + ") -> " + "(TEMPO: " + this.getTempo() + ")\t" + (isActive() ? "ATIVO   " : "INATIVO ")
+				+ (isActive() ? "(DELAY: " + this.durationTime + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")");
 	}
 }

@@ -3,9 +3,9 @@ package com.unisinos.gb.enginesimulacao.engine;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
@@ -73,24 +73,27 @@ public class Scheduler {
 
 	public void startProcessNow(Process process) {
 		process.setTime(tempo);
-		// processosAgendados.add(process);
 	}
 
 	public void startProcessIn(Process process, Double timeToStart) {
 		process.setTime(tempo + timeToStart);
-		// processosAgendados.add(process);
 	}
 
 	public void startProcessAt(Process process, Double absoluteTime) {
 		process.setTime(absoluteTime);
-		// processosAgendados.add(process);
 	}
 
 	public void printLog() {
 		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + " =========================");
 		StringBuilder stb = new StringBuilder();
+		// int totalAgendado = this.eventosAgendados.size();
+		int totalEventos = this.retornarSomenteEventosEventos().size();
+		int totalProcessos = this.retornarSomenteProcessos().size();
 		// Eventos
-		stb.append("EVENTOS -> " + "|".repeat(this.eventosAgendados.size()) + " (" + this.eventosAgendados.size() + ")\n\n");
+		// stb.append("EVENTOS TOTAIS -> " + "|".repeat(totalAgendado) + " (" +
+		// totalAgendado + ")\n");
+		stb.append("EVENTOS    -> " + "|".repeat(totalEventos) + " (" + totalEventos + ")\n");
+		stb.append("PROCESSOS  -> " + "|".repeat(totalProcessos) + " (" + totalProcessos + ")\n\n");
 		// Filas
 		this.entitySetList.forEach(fila -> {
 			stb.append(fila);
@@ -198,28 +201,9 @@ public class Scheduler {
 		return this.entitySetList.stream().filter(esl -> esl.getId() == id.intValue()).findAny().orElse(null);
 	}
 
-	// random variates
-
-	/**
-	 * Cria chegada na fila pelo tempo passado em minutos
-	 */
-
-//	public Double getProximoCiclo() {
-//		return eventosAgendados.stream().min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
-//	}
-
 	public Double getProximoCiclo() {
-		return eventosAgendados.stream().filter(event -> event.getTempo() > this.tempo).min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
-	}
-
-	// Alerta De Gambiarra! ARRUMAR ISSO AQUI ☠
-	public Optional<Double> getProximoProximoCiclo() {
-		return eventosAgendados.stream().filter(event -> event.getTempo() != this.tempo).min(Comparator.comparing(Event::getTempo)).map(Event::getTempo);
-	}
-
-	public void reAgendarProcessoProximoCiclo(Integer processID) {
-		getProximoProximoCiclo().ifPresent(it -> reAgendarProcesso(processID, it));
-
+		Event even = eventosAgendados.stream().filter(event -> event.getTempo() > this.tempo).min(Comparator.comparing(Event::getTempo)).orElse(null);
+		return even == null ? this.tempo : even.getTempo();
 	}
 
 	public void reAgendarProcesso(Integer processID, Double time) {
@@ -227,8 +211,6 @@ public class Scheduler {
 		if (!(eventProcess instanceof Process)) {
 			throw new RuntimeException("Event " + eventProcess.getId() + " Nao e processo!!");
 		}
-		eventProcess.setTime(this.tempo + time);
-		// Comentado metodo add pois pois colocado bloqueio de remoção no simulate()
-		// eventosAgendados.add(eventProcess);
+		eventProcess.setTime(DistributionEnum.round(this.tempo + time, DistributionEnum.NUMBER_DECIMALS));
 	}
 }

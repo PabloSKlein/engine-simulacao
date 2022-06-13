@@ -34,7 +34,7 @@ public enum DistributionEnum {
 	};
 
 	private final int key;
-	public static final int number_decimals = 2;
+	public static final int NUMBER_DECIMALS = 2;
 
 	DistributionEnum(int key) {
 		this.key = key;
@@ -49,24 +49,22 @@ public enum DistributionEnum {
 	public static double round(double value, int places) {
 		if (places < 0)
 			throw new IllegalArgumentException();
-
 		BigDecimal bd = BigDecimal.valueOf(value);
 		bd = bd.setScale(places, RoundingMode.DOWN);
 		return bd.doubleValue();
 	}
 
 	protected double uniform(Double minValue, Double maxValue) {
-		return round(ThreadLocalRandom.current().nextDouble(minValue, maxValue), number_decimals);
+		return round(ThreadLocalRandom.current().nextDouble(minValue, maxValue), NUMBER_DECIMALS);
 	}
 
 	protected double exponential(double meanValue) {
 		double lambda = (double) 1 / meanValue;
-		return round(Math.log((1 - new Random().nextDouble())) / (-lambda), number_decimals);
+		return round(Math.log((1 - new Random().nextDouble())) / (-lambda), NUMBER_DECIMALS);
 	}
 
 	protected double normal(Double meanValue, Double stdDeviationValue) {
 		Random r = new Random();
-		return round(r.nextGaussian() * stdDeviationValue + meanValue, number_decimals);
-//		return round(Math.abs((time - meanValue) / stdDeviationValue), number_decimals);
+		return round(r.nextGaussian() * stdDeviationValue + meanValue, NUMBER_DECIMALS);
 	}
 }

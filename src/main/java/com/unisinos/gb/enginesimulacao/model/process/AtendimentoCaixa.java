@@ -55,7 +55,13 @@ public class AtendimentoCaixa extends Process {
 
 	@Override
 	protected void executeOnEnd() {
-		filaPedido.insert(new Pedido(getScheduler().generateId(), (GrupoCliente) this.entity));
+		GrupoCliente cliente = (GrupoCliente) this.entity;
+		filaPedido.insert(new Pedido(getScheduler().generateId(), cliente));
+		if (cliente.getQuantidade() > 1) {
+			filaBalcao.insert(cliente);
+		} else {
+			filaMesa.insert(cliente);
+		}
 		caixaRecurso.release();
 	}
 
