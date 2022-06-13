@@ -14,9 +14,10 @@ public class SentarMesaBalcao extends Process {
 	private final EntitySet fila;
 	private final List<Resource> lugares;
 	private Entity entity;
+	private Resource lugarUsado;
 
 	public SentarMesaBalcao(Integer id, Scheduler scheduler, EntitySet fila, List<Resource> resources) {
-		super(id, "SENTARMESABALCAO " + id, scheduler, DistributionEnum.NONE);
+		super(id, "SENTARMESABALCAO" + id, scheduler, DistributionEnum.NONE);
 		this.lugares = resources;
 		this.fila = fila;
 	}
@@ -42,7 +43,7 @@ public class SentarMesaBalcao extends Process {
 	}
 
 	private boolean check() {
-		return this.lugares.stream().anyMatch(l -> !l.allocate());
+		return this.lugares.stream().anyMatch(l -> l.isNotAllocated());
 	}
 
 	@Override
@@ -51,13 +52,12 @@ public class SentarMesaBalcao extends Process {
 		this.entity = fila.remove();
 		GrupoCliente clientes = (GrupoCliente) this.entity;
 		// Se tem lugar disponivel
-		Resource lug = this.lugares.stream().filter(l -> !l.allocate()).findAny().orElse(null);
-		lug.allocateSpecific(clientes.getQuantidade());
+		lugarUsado = this.lugares.stream().filter(l -> l.isNotAllocated()).findAny().orElse(null);
+		lugarUsado.allocateSpecific(clientes.getQuantidade());
 	}
 
 	@Override
 	protected void executeOnEnd() {
-
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.unisinos.gb.enginesimulacao.model.event.Saida;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.PreparaRefeicao;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.process.Refeicao;
 import com.unisinos.gb.enginesimulacao.model.process.SentarMesaBalcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
@@ -86,6 +87,17 @@ public class EngineSimulacaoApplication {
 		// Cria os eventos de entrada
 		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2, sentarMesa, sentarBalcao, prepararComida1, prepararComida2, prepararComida3);
+
+		// Criar processos de mesas
+		de.getMesasDisponiveis().forEach(md -> {
+			var refeicaoMesa = new Refeicao(de.generateId(), de, filaPedidosPreparados, md);
+			criaProcessosNoTempoZero(refeicaoMesa);
+		});
+
+		de.getBalcaoDisponivel().forEach(md -> {
+			var refeicaoBalcao = new Refeicao(de.generateId(), de, filaPedidosPreparados, md);
+			criaProcessosNoTempoZero(refeicaoBalcao);
+		});
 
 		de.simulate();
 		// de.simulateBy(100.0);

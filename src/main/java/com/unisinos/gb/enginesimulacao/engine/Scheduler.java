@@ -114,7 +114,10 @@ public class Scheduler {
 	}
 
 	public void printLog() {
-		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + " =========================");
+		System.out.println("=".repeat(100));
+		System.out.println("     ========= CICLO " + this.contCiclos + " ======= TEMPO " + this.tempo + " ===== ENTRADAS " + this.contChegada + " ======= SAIDAS "
+				+ this.contSaida + " =============");
+		System.out.println("=".repeat(100));
 		StringBuilder stb = new StringBuilder();
 		// int totalAgendado = this.eventosAgendados.size();
 		int totalEventos = this.retornarSomenteEventosEventos().size();
@@ -195,7 +198,10 @@ public class Scheduler {
 			return true;
 		}
 		// Se não tem eventos, tem que verificar se algum esta ativo (processando)
-		return retornarSomenteProcessos().stream().anyMatch(pro -> pro.isActive());
+		if (retornarSomenteProcessos().stream().anyMatch(pro -> pro.isActive())) {
+			return true;
+		}
+		return (this.contChegada > this.contSaida);
 	}
 
 	public void simulateBy(Double duration) {

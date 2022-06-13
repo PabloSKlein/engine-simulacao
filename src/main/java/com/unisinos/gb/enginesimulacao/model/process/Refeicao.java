@@ -5,7 +5,6 @@ import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class Refeicao extends Process {
@@ -14,11 +13,10 @@ public class Refeicao extends Process {
 	private final Resource local;
 	private Entity pedido;
 
-	public Refeicao(Integer id, Scheduler scheduler, EntitySet filaPreparados, Resource local, Pedido pedido) {
-		super(id, "REFEICAO " + id, scheduler, DistributionEnum.NORMAL);
+	public Refeicao(Integer id, Scheduler scheduler, EntitySet filaPreparados, Resource local) {
+		super(id, "REFEICAO        " + id, scheduler, DistributionEnum.NORMAL);
 		this.filaPreparados = filaPreparados;
 		this.local = local;
-		this.pedido = pedido;
 	}
 
 	@Override
@@ -43,8 +41,6 @@ public class Refeicao extends Process {
 
 	@Override
 	protected void executeOnStart() {
-		
-//		cozinheiro.allocate();
 		this.pedido = filaPreparados.remove();
 	}
 
