@@ -3,8 +3,8 @@ package com.unisinos.gb.enginesimulacao.model.event;
 import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 
 public class Saida extends Event {
-    public Saida(int eventId, Scheduler scheduler, double time) {
-        super(eventId, "SAÍDA" + eventId, scheduler, time);
+    public Saida(int eventId, Scheduler scheduler) {
+        super(eventId, "SAÍDA" + eventId, scheduler, 0.0);
     }
 
     @Override
