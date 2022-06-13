@@ -35,7 +35,7 @@ public class Scheduler {
 	private final List<Event> eventosAgendados = new ArrayList<>();
 	// private final List<Process> processosAgendados = new ArrayList<>();
 	private final List<EntitySet> entitySetList = new ArrayList<>();
-//	private final List<s> processes = new ArrayList<>();
+	// private final List<s> processes = new ArrayList<>();
 
 	// Inicializa as filas
 	private EntitySet filaBalcao = new EntitySet(generateId(), "FILA BALCAO", QueueModeEnum.FIFO, 100);
@@ -47,34 +47,37 @@ public class Scheduler {
 	// Recursos
 	private Caixa caixa1 = criaCaixa("Caixa 1", 1);
 	private Caixa caixa2 = criaCaixa("Caixa 2", 1);
+	private Balcao balcao = new Balcao(this.generateId(), "BALCAO", 6);
+	private Mesa[] mesas = criaMesa();
 
 	// Processos
-	private Process atendimentoCaixa1 = criaAtendimento(0.0, filaCaixa1, filaPedido, filaBalcao, filaMesas, caixa1);
-	private Process atendimentoCaixa2 = criaAtendimento(0.0, filaCaixa2, filaPedido, filaBalcao, filaMesas, caixa2);
+	private Process atendimentoCaixa1 = criaAtendimento(0.0, filaCaixa1, filaPedido, filaBalcao, filaMesas, caixa1,
+			mesas, balcao);
+	private Process atendimentoCaixa2 = criaAtendimento(0.0, filaCaixa2, filaPedido, filaBalcao, filaMesas, caixa2,
+			mesas, balcao);
 
-	private Balcao balcao = new Balcao(this.id(), "BALCAO", 6);
-	private Mesa[] mesas = new ArrayList<Mesa>();
-
-	public void startMesas() {
-		for (int i = 0; i < this.mesas.length; i++) {
+	public Mesa[] criaMesa() {
+		Mesa[] mesas = new Mesa[8];
+		for (int i = 0; i < mesas.length; i++) {
 			if (i < 4)
-				this.mesas[i] = new Mesa(this.getI(), "MESA " + i, 2);
+				mesas[i] = new Mesa(this.generateId(), "MESA " + i, 2);
 			else
-				this.mesas[i] = new Mesa(this.getId(), "MESA " + i, 4);
+				mesas[i] = new Mesa(this.generateId(), "MESA " + i, 4);
 		}
+		return mesas;
 	}
 
-//	private Balcao = new Balcao(this.id(),"BALCAO", 6);
-//	private Mesa[] mesas = new ArrayList<Mesa>();
+	// private Balcao = new Balcao(this.id(),"BALCAO", 6);
+	// private Mesa[] mesas = new ArrayList<Mesa>();
 
-//	public void startMesas(){
-//		for (int i = 0; i < this.mesas.length; i++) {
-//			if (i < 4)
-//				this.mesas[i] = new Mesa(this.getI(), "MESA " + i, 2);
-//			else
-//				this.mesas[i] = new Mesa(this.getId(), "MESA " + i, 4);
-//		}
-//	}
+	// public void startMesas(){
+	// for (int i = 0; i < this.mesas.length; i++) {
+	// if (i < 4)
+	// this.mesas[i] = new Mesa(this.getI(), "MESA " + i, 2);
+	// else
+	// this.mesas[i] = new Mesa(this.getId(), "MESA " + i, 4);
+	// }
+	// }
 
 	public void criaChegadaFila(double time) {
 		int id = this.generateId();
@@ -116,31 +119,31 @@ public class Scheduler {
 
 	public void startProcessNow(Process process) {
 		process.setTime(time);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
 	}
 
 	public void startProcessIn(Process process, Double timeToStart) {
 		process.setTime(time + timeToStart);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
 	}
 
 	public void startProcessAt(Process process, Double absoluteTime) {
 		process.setTime(absoluteTime);
-//		processosAgendados.add(process);
+		// processosAgendados.add(process);
 	}
 
 	public double chooseDistribution(DistributionEnum Denum) throws Exception {
 		System.out.println(Denum);
 		switch (Denum) {
-		case EXPONENTIAL:
-			return this.exponential(meanValue);
-		case UNIFORM:
-			return this.uniform(minValue, maxValue);
-		case NORMAL:
-			return this.normalScheduler(meanValue, stdDeviationValue);
-		default:
-			System.out.println("invalid option");
-			throw new RuntimeException();
+			case EXPONENTIAL:
+				return this.exponential(meanValue);
+			case UNIFORM:
+				return this.uniform(minValue, maxValue);
+			case NORMAL:
+				return this.normalScheduler(meanValue, stdDeviationValue);
+			default:
+				System.out.println("invalid option");
+				throw new RuntimeException();
 		}
 	}
 
@@ -176,7 +179,7 @@ public class Scheduler {
 	 * um evento e para; insere numa fila e para, etc.
 	 */
 	public void simulateOneStep() {
-//    	this.eventosAgendados.get(0).execute();
+		// this.eventosAgendados.get(0).execute();
 	}
 
 	public void simulateBy(long duration) {
@@ -200,7 +203,8 @@ public class Scheduler {
 	public Entity getEntity(Integer id) throws Exception {
 		Entity searchedEntity = null;
 		for (EntitySet entitySet : this.entitySetList) {
-			searchedEntity = entitySet.getEntityList().stream().filter(e -> e.getId() == id.intValue()).findAny().orElse(null);
+			searchedEntity = entitySet.getEntityList().stream().filter(e -> e.getId() == id.intValue()).findAny()
+					.orElse(null);
 			if (searchedEntity != null)
 				return searchedEntity;
 		}
@@ -226,7 +230,8 @@ public class Scheduler {
 	 * retorna referência para instancia de Event
 	 */
 	public Event getEvent(Integer eventId) throws Exception {
-		return this.eventosAgendados.stream().filter(e -> e.getId().intValue() == eventId.intValue()).findAny().orElse(null);
+		return this.eventosAgendados.stream().filter(e -> e.getId().intValue() == eventId.intValue()).findAny()
+				.orElse(null);
 	}
 
 	/*
@@ -291,7 +296,8 @@ public class Scheduler {
 	}
 
 	public void reAgendarProcesso(Integer processID, Double time) {
-		Event eventProcess = eventosAgendados.stream().filter(proc -> proc.getId() == processID.intValue()).findAny().orElseThrow();
+		Event eventProcess = eventosAgendados.stream().filter(proc -> proc.getId() == processID.intValue()).findAny()
+				.orElseThrow();
 		if ((eventProcess instanceof Process) == false) {
 			throw new RuntimeException("Event " + eventProcess.getId() + " Nao e processo!!");
 		}
@@ -306,9 +312,11 @@ public class Scheduler {
 		return new Caixa(generateId(), nome, i);
 	}
 
-	public AtendimentoCaixa criaAtendimento(double time, EntitySet filaCaixa1, EntitySet filaPedido, EntitySet filaBalcao, EntitySet filaMesa, Caixa recursoCaixa1) {
+	public AtendimentoCaixa criaAtendimento(double time, EntitySet filaCaixa1, EntitySet filaPedido,
+			EntitySet filaBalcao, EntitySet filaMesa, Caixa recursoCaixa1, Mesa[] mesas, Balcao balcao) {
 		var id = generateId();
-		return new AtendimentoCaixa(id, "ATENDIMENTO CAIXA" + id, this, time, 1.0, filaCaixa1, filaPedido, filaBalcao, filaMesa, recursoCaixa1);
+		return new AtendimentoCaixa(id, "ATENDIMENTO CAIXA" + id, this, time, 1.0, filaCaixa1, filaPedido, filaBalcao,
+				filaMesa, recursoCaixa1, balcao, mesas);
 	}
 
 	public static void main(String[] args) throws Exception {

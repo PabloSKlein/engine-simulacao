@@ -16,12 +16,14 @@ public class AtendimentoCaixa extends Process {
 	private final EntitySet filaPedido;
 	private final EntitySet filaMesa;
 	private final EntitySet filaBalcao;
-	private Entity entity;
+	private EntitySet filaSaida;
+	private GrupoCliente entity;
 	private final Resource caixaRecurso;
 	private Balcao balcao;
 	private Mesa[] mesas;
 
-	public AtendimentoCaixa(Integer id, String name, Scheduler scheduler, double time, Double duration, EntitySet filaCaixa, EntitySet filaPedido, EntitySet filaMesa,
+	public AtendimentoCaixa(Integer id, String name, Scheduler scheduler, double time, Double duration,
+			EntitySet filaCaixa, EntitySet filaPedido, EntitySet filaMesa,
 			EntitySet filaBalcao, Caixa recursoCaixa, Balcao balcao, Mesa[] mesas) {
 		super(id, name, scheduler, time, duration, false);
 		this.filaCaixa = filaCaixa;
@@ -36,17 +38,17 @@ public class AtendimentoCaixa extends Process {
 	@Override
 	public void executeOnStart() {
 		caixaRecurso.allocate();
-		this.entity = filaCaixa.remove();
+		this.entity = (GrupoCliente) filaCaixa.remove();
 	}
 
 	@Override
 	public void executeOnEnd() {
 		filaPedido.insert(new Pedido((GrupoCliente) this.entity));
 
-		if (this.entity.getQuantidade() >= 2)
-			temMesa();
-		else
-			temBalcao();
+		// if (this.entity.getQuantidade() >= 2)
+		// new SentaMesa();
+		// else
+		// new SentaBanco();
 
 		caixaRecurso.release();
 	}
@@ -82,50 +84,6 @@ public class AtendimentoCaixa extends Process {
 	@Override
 	public boolean deveProcessar() {
 		return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
-	}
-
-	private void temMesa() {
-		boolean achouMesa = false;
-		for (int i = 0; i < mesas.length; i++) {
-			if (this.entity.getQuantidade() == 2) {
-				if (i < 4) {
-					if (mesas[i].isOccupied()) {
-						mesas[i].ocupaMesa();
-						this.filaSaida.insert(this.entity);
-						achouMesa = true;
-						break;
-					} else if (!mesas[3].isOccupied()) {
-						achouMesa = false;
-						break;
-					}
-				} else {
-					if (mesas[i].isOccupied()) {
-						mesas[i].ocupaMesa();
-						this.filaSaida.insert(this.entity);
-						achouMesa = true;
-						break;
-					} else if (!mesas[7].isOccupied()) {
-						achouMesa = false;
-						break;
-					}
-				}
-			}
-		}
-
-		if (!achouMesa) {
-			filaMesa.insert(this.entity);
-		}
-	}
-
-	private void temBalcao() {
-		if (balcao.isOccupied() == false) {
-			balcao.ocupaBanco();
-			this.filaSaida.insert(this.entity);
-			// Time de saida
-			// Faço o que com o grupo de pessoas?
-		} else {
-			filaBalcao.insert(group);
-		}
 	}
 
 }
