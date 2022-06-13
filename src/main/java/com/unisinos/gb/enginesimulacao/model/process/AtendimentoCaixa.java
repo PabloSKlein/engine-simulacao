@@ -1,8 +1,8 @@
 package com.unisinos.gb.enginesimulacao.model.process;
 
+import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
@@ -53,10 +53,5 @@ public class AtendimentoCaixa extends Process {
     @Override
     public boolean deveProcessar() {
         return caixaRecurso.podeAlocarRecurso() && !filaCaixa.isEmpty();
-    }
-
-    @Override
-    public void execute() {
-        throw new RuntimeException("Não implementado");
     }
 }

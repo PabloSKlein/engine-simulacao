@@ -6,12 +6,12 @@ import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 public abstract class Event extends Scheduled {
     private double time;
 
-    public Event(Integer id, String name, Scheduler scheduler, double time) {
+    protected Event(Integer id, String name, Scheduler scheduler, double time) {
         super(id, name, scheduler);
         this.time = time;
     }
 
-    public double getTime() {
+    public double getTempo() {
         return time;
     }
 

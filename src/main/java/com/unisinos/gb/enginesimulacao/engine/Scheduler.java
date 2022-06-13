@@ -1,23 +1,14 @@
 package com.unisinos.gb.enginesimulacao.engine;
 
-import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
-import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.entity.Entity;
-import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
-import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
-import com.unisinos.gb.enginesimulacao.model.event.Chegada;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
-import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
-import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
-import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
-import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
-import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Scheduler {
 
@@ -26,8 +17,8 @@ public class Scheduler {
     public static double minValue = 1;
     public static double maxValue = 6;
 
-    private Double time;
-    private static int id = 0;
+    private Double tempo = 0.0;
+    private int id = 0;
 
     private int contChegada = 0;
     private int contSaida = 0;
@@ -44,23 +35,19 @@ public class Scheduler {
         return this.entitySetList;
     }
 
-    public Double getTime() {
-        return time;
-    }
-
-    public List<Event> getEventosAgendados() {
-        return eventosAgendados;
+    public Double getTempo() {
+        return tempo;
     }
 
     // disparo de eventos e processos =============================================
 
     public void scheduleNow(Event event) {
-        event.setTime(this.time);
+        event.setTime(this.tempo);
         eventosAgendados.add(event);
     }
 
     public void scheduleIn(Event event, Double timeToEvent) {
-        event.setTime(time + timeToEvent);
+        event.setTime(tempo + timeToEvent);
         eventosAgendados.add(event);
     }
 
@@ -70,12 +57,12 @@ public class Scheduler {
     }
 
     public void startProcessNow(Process process) {
-        process.setTime(time);
+        process.setTime(tempo);
 //		processosAgendados.add(process);
     }
 
     public void startProcessIn(Process process, Double timeToStart) {
-        process.setTime(time + timeToStart);
+        process.setTime(tempo + timeToStart);
 //		processosAgendados.add(process);
     }
 
@@ -83,7 +70,6 @@ public class Scheduler {
         process.setTime(absoluteTime);
 //		processosAgendados.add(process);
     }
-
 
     /**
      *  se a abordagem para especificação da passagem de tempo nos processos for
@@ -100,16 +86,18 @@ public class Scheduler {
      * processar (FEL vazia, i.e., lista de eventos futuros vazia)
      */
     public void simulate() {
-        /*
-         * >>>>>>> 6672fb65fb785cf40fc7b378073dba025c2c2249 while
-         * (!eventosAgendados.isEmpty()) {
-         * eventosAgendados.stream().min(Comparator.comparing(Event::getTime)).ifPresent
-         * (menorEvento -> { this.time = menorEvento.getTime(); menorEvento.execute();
-         * eventosAgendados.remove(menorEvento); });
-         *
-         * processes.stream().filter(Process::deveProcessar).forEach(Process::excute); }
-         * System.out.println("Todos eventos processados.");
-         */
+        while (!eventosAgendados.isEmpty()) {
+            var proximoCiclo = getProximoCiclo();
+            var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).collect(Collectors.toList());
+
+
+            eventosDoCiclo.forEach(menorEvento -> {
+                menorEvento.execute();
+                eventosAgendados.remove(menorEvento);
+            });
+            this.tempo = proximoCiclo;
+        }
+        System.out.println("Todos eventos processados.");
     }
 
     /*
@@ -117,17 +105,17 @@ public class Scheduler {
      * um evento e para; insere numa fila e para, etc.
      */
     public void simulateOneStep() {
-//    	this.eventosAgendados.get(0).execute();
+        //    	this.eventosAgendados.get(0).execute();
     }
 
     public void simulateBy(long duration) {
-        while (this.getTime() <= duration) {
+        while (this.getTempo() <= duration) {
             // simula
         }
     }
 
     public void simulateUntil(long absoluteTime) {
-        while (this.getTime() < absoluteTime) {
+        while (this.getTempo() < absoluteTime) {
             // simula
         }
     }
@@ -135,29 +123,6 @@ public class Scheduler {
     // criação, destruição e acesso para componentes
     // ===============================================
 
-    /*
-     * retorna referência para instância de Entity
-     */
-    public Entity getEntity(Integer id) throws Exception {
-        Entity searchedEntity = null;
-        for (EntitySet entitySet : this.entitySetList) {
-            searchedEntity = entitySet.getEntityList().stream().filter(e -> e.getId() == id.intValue()).findAny().orElse(null);
-            if (searchedEntity != null)
-                return searchedEntity;
-        }
-        return null;
-    }
-
-    /*
-     * retorna referência para instância de Resource
-     */
-    public Resource getResource(Integer id) throws Exception {
-        throw new Exception("IMPLEMENTAR");
-    }
-
-    public Integer createEvent(Event event) {
-        return 1;
-    }
 
     public Integer generateId() {
         return ++id;
@@ -184,11 +149,20 @@ public class Scheduler {
      */
 
     public Double getProximoCiclo() {
-        return eventosAgendados.stream().min(Comparator.comparing(Event::getTime)).orElseThrow().getTime();
+        return eventosAgendados.stream().min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
+    }
+
+    //Alerta De Gambiarra!
+    public Optional<Double> getProximoProximoCiclo() {
+        return eventosAgendados.stream()
+                .filter(event -> event.getTempo() != this.tempo)
+                .min(Comparator.comparing(Event::getTempo))
+                .map(Event::getTempo);
     }
 
     public void reAgendarProcessoProximoCiclo(Integer processID) {
-        reAgendarProcesso(processID, getProximoCiclo());
+        getProximoProximoCiclo().ifPresent(it -> reAgendarProcesso(processID, it));
+
     }
 
     public void reAgendarProcesso(Integer processID, Double time) {
@@ -196,6 +170,7 @@ public class Scheduler {
         if (!(eventProcess instanceof Process)) {
             throw new RuntimeException("Event " + eventProcess.getId() + " Nao e processo!!");
         }
-        eventProcess.setTime(this.time + time);
+        eventProcess.setTime(this.tempo + time);
+        eventosAgendados.add(eventProcess);
     }
 }

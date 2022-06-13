@@ -16,7 +16,7 @@ public enum DistributionEnum {
 	}, EXPONENTIAL(3) {
 		@Override
 		public double getDistribution(Double minValue, Double maxValue) {
-			return 0;
+			return exponential(maxValue);
 		}
 	};
 	

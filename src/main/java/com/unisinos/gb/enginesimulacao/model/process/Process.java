@@ -34,7 +34,7 @@ public abstract class Process extends Event {
 
 	public abstract void executeOnEnd();
 
-	public void excute() {
+	public void execute(){
 		// Se tiver ativo e por que ja foi iniciado e esta em delay
 		if (isActive()) {
 			this.executeOnEnd();
