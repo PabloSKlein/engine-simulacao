@@ -24,7 +24,7 @@ public class EngineSimulacaoApplication {
 
 	public static void criaChegadaPeloTempo(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
 		for (int i = 3; i <= time; i = i + 3) {
-			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(null, null, 3.0, null, null);
+			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(null, null, 3.0, null);
 			criaChegada(timeArrival, filaCaixa1, filaCaixa2);
 		}
 	}
