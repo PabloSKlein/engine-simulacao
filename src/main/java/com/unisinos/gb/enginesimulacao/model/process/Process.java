@@ -13,6 +13,7 @@ public abstract class Process extends Event {
 		super(id, name, scheduler, 1.0);
 		this.distributionEnum = distributionEnum;
 		this.active = false;
+		this.setRemoveEvent(false);
 	}
 
 	public boolean isActive() {
@@ -31,14 +32,19 @@ public abstract class Process extends Event {
 		this.active = active;
 	}
 
+	public DistributionEnum getDistributionEnum() {
+		return distributionEnum;
+	}
+
 	public Double getDuration() {
 		return distributionEnum.getDistribution(getMin(), getMax(), getMean(), getStdDeviation());
 	}
 
-	public abstract void executeOnStart();
+	protected abstract void executeOnStart();
 
-	public abstract void executeOnEnd();
+	protected abstract void executeOnEnd();
 
+	@Override
 	public void execute() {
 		// Se tiver ativo e por que ja foi iniciado e esta em delay
 		if (isActive()) {
@@ -50,8 +56,10 @@ public abstract class Process extends Event {
 				this.setActive(true);
 				this.executeOnStart();
 				this.getScheduler().reAgendarProcesso(this.getId(), getDuration());
+				this.renewPriority();
 			} else {
-				this.getScheduler().reAgendarProcessoProximoCiclo(this.getId());
+				// Se não consegue processar aumenta a prioridade
+				this.addPriority();
 			}
 		}
 	}
@@ -60,6 +68,7 @@ public abstract class Process extends Event {
 
 	@Override
 	public String toString() {
-		return "PROCESSO (" + this.getName() + ") -> " + "ATIVO: " + isActive() + " DELAY: " + getDuration() + " DISTIBUIÇÃO: " + distributionEnum;
+		return "PROCESSO (" + this.getName() + ") -> " + "ATIVO: " + isActive() + " DELAY: " + getDuration() + " DISTIBUIÇÃO: " + distributionEnum + " PRIORIDADE: "
+				+ this.getPriority() + " DESATIVADO: " + this.isRemoveEvent();
 	}
 }

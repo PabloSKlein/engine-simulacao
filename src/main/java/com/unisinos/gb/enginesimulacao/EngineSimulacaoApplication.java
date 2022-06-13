@@ -14,6 +14,25 @@ public class EngineSimulacaoApplication {
 	static final Scheduler de = new Scheduler();
 	public static final double TEMPO_INICIAL_SISTEMA = 0.0;
 
+	private static void adicionaFilasNoSchedulerParaLog(EntitySet... filas) {
+		Arrays.stream(filas).forEach(de::addEntitySet);
+	}
+
+	private static void criaProcessosNoTempoZero(AtendimentoCaixa... processos) {
+		Arrays.stream(processos).forEach(processo -> de.scheduleAt(processo, TEMPO_INICIAL_SISTEMA));
+	}
+
+	public static void criaChegadaPeloTempo(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
+		for (int i = 3; i <= time; i = i + 3) {
+			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(null, null, 3.0, null);
+			criaChegada(timeArrival, filaCaixa1, filaCaixa2);
+		}
+	}
+
+	public static void criaChegada(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
+		de.scheduleAt(new Chegada(de.generateId(), filaCaixa1, filaCaixa2, de, 1.0), time);
+	}
+
 	public static void main(String[] args) {
 
 		// Inicializa as filas
@@ -35,25 +54,11 @@ public class EngineSimulacaoApplication {
 		// Cria os eventos de entrada
 		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2);
+
 		de.simulate();
+		// de.simulateBy(100.0);
+
+		System.out.println("\nFINALIZADO.");
 	}
 
-	private static void adicionaFilasNoSchedulerParaLog(EntitySet... filas) {
-		Arrays.stream(filas).forEach(de::addEntitySet);
-	}
-
-	private static void criaProcessosNoTempoZero(AtendimentoCaixa... processos) {
-		Arrays.stream(processos).forEach(processo -> de.scheduleAt(processo, TEMPO_INICIAL_SISTEMA));
-	}
-
-	public static void criaChegadaPeloTempo(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
-		for (int i = 3; i <= time; i = i + 3) {
-			double timeArrival = DistributionEnum.EXPONENTIAL.getDistribution(null, null, 3.0, null);
-			criaChegada(timeArrival, filaCaixa1, filaCaixa2);
-		}
-	}
-
-	public static void criaChegada(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
-		de.scheduleAt(new Chegada(de.generateId(), filaCaixa1, filaCaixa2, de, 1.0), time);
-	}
 }

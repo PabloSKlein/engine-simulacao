@@ -48,13 +48,13 @@ public class AtendimentoCaixa extends Process {
 	}
 
 	@Override
-	public void executeOnStart() {
+	protected void executeOnStart() {
 		caixaRecurso.allocate();
 		this.entity = filaCaixa.remove();
 	}
 
 	@Override
-	public void executeOnEnd() {
+	protected void executeOnEnd() {
 		filaPedido.insert(new Pedido(getScheduler().generateId(), (GrupoCliente) this.entity));
 		caixaRecurso.release();
 	}

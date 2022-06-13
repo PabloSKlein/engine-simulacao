@@ -16,6 +16,7 @@ public class Scheduler {
 	public static double stdDeviationValue = 5;
 	public static double minValue = 1;
 	public static double maxValue = 6;
+	private boolean desativarProcessos = false;
 
 	private Double tempo = 0.0;
 	private int id = 0;
@@ -38,6 +39,14 @@ public class Scheduler {
 
 	public Double getTempo() {
 		return tempo;
+	}
+
+	private List<Process> retornarSomenteProcessos() {
+		return this.eventosAgendados.stream().filter(eventos -> eventos instanceof Process).map(e -> (Process) e).collect(Collectors.toList());
+	}
+
+	private List<Event> retornarSomenteEventosEventos() {
+		return this.eventosAgendados.stream().filter(eventos -> (eventos instanceof Process) == false).collect(Collectors.toList());
 	}
 
 	// disparo de eventos e processos =============================================
@@ -74,10 +83,18 @@ public class Scheduler {
 
 	public void printLog() {
 		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + " =========================");
-		// Filas
 		StringBuilder stb = new StringBuilder();
+		// Eventos
+		stb.append("EVENTOS -> " + "|".repeat(this.eventosAgendados.size()) + " (" + this.eventosAgendados.size() + ")\n\n");
+		// Filas
 		this.entitySetList.forEach(fila -> {
 			stb.append(fila);
+			stb.append("\n");
+		});
+		stb.append("\n");
+		// Processos
+		this.retornarSomenteProcessos().forEach(processos -> {
+			stb.append(processos);
 			stb.append("\n");
 		});
 		stb.append("\n");
@@ -99,22 +116,9 @@ public class Scheduler {
 	 * processar (FEL vazia, i.e., lista de eventos futuros vazia)
 	 */
 	public void simulate() {
-		printLog();
-		this.contCiclos++;
 		while (!eventosAgendados.isEmpty()) {
-			var proximoCiclo = getProximoCiclo();
-			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).collect(Collectors.toList());
-			eventosDoCiclo.forEach(menorEvento -> {
-				menorEvento.execute();
-				// Adicionado pois eventos que forem do tipo Processo não podem ser removidos
-				if (!(menorEvento instanceof Process)) {
-					eventosAgendados.remove(menorEvento);
-				}
-			});
-			printLog();
-			this.tempo = proximoCiclo;
+			simulateOneStep();
 		}
-		System.out.println("Todos eventos processados.");
 	}
 
 	/*
@@ -122,18 +126,55 @@ public class Scheduler {
 	 * um evento e para; insere numa fila e para, etc.
 	 */
 	public void simulateOneStep() {
-		// this.eventosAgendados.get(0).execute();
-	}
-
-	public void simulateBy(long duration) {
-		while (this.getTempo() <= duration) {
-			// simula
+		if (this.contCiclos == 0) {
+			printLog();
+		}
+		this.contCiclos++;
+		if (!eventosAgendados.isEmpty()) {
+			// Ajustado, nunca pode pegar coisas no passado.
+			var proximoCiclo = getProximoCiclo();
+			// Adicionano ordenação por prioridade
+			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).sorted(Comparator.comparingInt(Event::getPriority).reversed())
+					.collect(Collectors.toList());
+			eventosDoCiclo.forEach(menorEvento -> {
+				menorEvento.execute();
+				// tratamento especiais de tipo processo
+				if (menorEvento instanceof Process) {
+					if (desativarProcessos) {
+						menorEvento.setRemoveEvent(true);
+					}
+				}
+				if (menorEvento.isRemoveEvent()) {
+					eventosAgendados.remove(menorEvento);
+				}
+			});
+			printLog();
+			this.tempo = proximoCiclo;
+			desativarProcessos = this.deveDesligarProcessos();
 		}
 	}
 
-	public void simulateUntil(long absoluteTime) {
+	private boolean deveDesligarProcessos() {
+		// Verifica se tem eventos não processos.
+		boolean temEventosEventos = !retornarSomenteEventosEventos().isEmpty();
+		if (!temEventosEventos) {
+			// Se não tem eventos, verifica se todos os processos estão ativos (aguardando
+			// eventos)
+			boolean temProcessoAtivo = retornarSomenteProcessos().stream().anyMatch(pro -> pro.isActive());
+			return !temProcessoAtivo;
+		}
+		return false;
+	}
+
+	public void simulateBy(Double duration) {
+		while (this.getTempo() <= duration) {
+			simulateOneStep();
+		}
+	}
+
+	public void simulateUntil(Double absoluteTime) {
 		while (this.getTempo() < absoluteTime) {
-			// simula
+			simulateOneStep();
 		}
 	}
 
@@ -164,11 +205,15 @@ public class Scheduler {
 	 * Cria chegada na fila pelo tempo passado em minutos
 	 */
 
+//	public Double getProximoCiclo() {
+//		return eventosAgendados.stream().min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
+//	}
+
 	public Double getProximoCiclo() {
-		return eventosAgendados.stream().min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
+		return eventosAgendados.stream().filter(event -> event.getTempo() > this.tempo).min(Comparator.comparing(Event::getTempo)).orElseThrow().getTempo();
 	}
 
-	// Alerta De Gambiarra!
+	// Alerta De Gambiarra! ARRUMAR ISSO AQUI ☠
 	public Optional<Double> getProximoProximoCiclo() {
 		return eventosAgendados.stream().filter(event -> event.getTempo() != this.tempo).min(Comparator.comparing(Event::getTempo)).map(Event::getTempo);
 	}
