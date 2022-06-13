@@ -13,8 +13,10 @@ public class Refeicao extends Process {
 	private final Resource local;
 	private Entity pedido;
 
-	public Refeicao(Integer id, Scheduler scheduler, EntitySet filaPreparados, Resource local) {
-		super(id, "REFEICAO        " + id, scheduler, DistributionEnum.NORMAL);
+	public Refeicao(Integer id, Scheduler scheduler, String name, EntitySet filaPreparados, Resource local) {
+
+		super(id, "REFEICAO" + name + +id, scheduler, DistributionEnum.NORMAL);
+
 		this.filaPreparados = filaPreparados;
 		this.local = local;
 	}

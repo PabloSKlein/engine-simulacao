@@ -113,10 +113,15 @@ public class Scheduler {
 		process.setTime(absoluteTime);
 	}
 
+	public String getMinimunSize(String value, Integer minimum) {
+		value = (value == null ? "" : value);
+		return (value.length() > minimum ? value : (value + (" ".repeat(minimum - value.length()))));
+	}
+
 	public void printLog() {
 		System.out.println("=".repeat(100));
-		System.out.println("     ========= CICLO " + this.contCiclos + " ======= TEMPO " + this.tempo + " ===== ENTRADAS " + this.contChegada + " ======= SAIDAS "
-				+ this.contSaida + " =============");
+		System.out.println("     ========= CICLO " + this.contCiclos + " ======= TEMPO " + this.tempo + " ===== ENTRADAS " + this.contChegada + " ======= SAIDAS " + this.contSaida
+				+ " =============");
 		System.out.println("=".repeat(100));
 		StringBuilder stb = new StringBuilder();
 		// int totalAgendado = this.eventosAgendados.size();

@@ -85,24 +85,26 @@ public class EngineSimulacaoApplication {
 		var sentarBalcao = new SentarMesaBalcao(de.generateId(), de, filaBalcao, de.getBalcaoDisponivel());
 
 		// Cria os eventos de entrada
-		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
+		criaChegadaPeloTempo(180, filaCaixa1, filaCaixa2);
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2, sentarMesa, sentarBalcao, prepararComida1, prepararComida2, prepararComida3);
 
 		// Criar processos de mesas
 		de.getMesasDisponiveis().forEach(md -> {
-			var refeicaoMesa = new Refeicao(de.generateId(), de, filaPedidosPreparados, md);
+			var refeicaoMesa = new Refeicao(de.generateId(), de, "   MESA ", filaPedidosPreparados, md);
 			criaProcessosNoTempoZero(refeicaoMesa);
 		});
 
 		de.getBalcaoDisponivel().forEach(md -> {
-			var refeicaoBalcao = new Refeicao(de.generateId(), de, filaPedidosPreparados, md);
+			var refeicaoBalcao = new Refeicao(de.generateId(), de, " BALCAO ", filaPedidosPreparados, md);
 			criaProcessosNoTempoZero(refeicaoBalcao);
 		});
 
 		de.simulate();
 		// de.simulateBy(100.0);
-
-		System.out.println("\nFINALIZADO.");
+		System.out.println("=".repeat(100));
+		System.out.println("=".repeat(100));
+		System.out.println("=".repeat(100));
+		System.out.println("\nSIMULAÇÃO FINALIZADA.");
 	}
 
 }

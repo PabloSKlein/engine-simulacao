@@ -74,7 +74,7 @@ public abstract class Process extends Event {
 
 	@Override
 	public String toString() {
-		return "PROCESSO (" + this.getName() + ") -> " + "(TEMPO: " + this.getTempo() + ")\t" + (isActive() ? "ATIVO   " : "INATIVO ")
+		return "PROCESSO (" + this.getName() + ") -> " + getScheduler().getMinimunSize("(TEMPO: " + this.getTempo() + ")", 15) + "\t" + (isActive() ? "ATIVO   " : "INATIVO ")
 				+ (isActive() ? "(DELAY: " + this.durationTime + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")");
 	}
 }
