@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.PetriNet;
+import com.unisinos.gb.enginesimulacao.engine.PetriNet;
 
 public abstract class Entity {
 

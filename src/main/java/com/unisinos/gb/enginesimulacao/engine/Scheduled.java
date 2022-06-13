@@ -1,4 +1,4 @@
-package com.unisinos.gb.enginesimulacao.model;
+package com.unisinos.gb.enginesimulacao.engine;
 
 public abstract class Scheduled {
 	private final Integer id;
