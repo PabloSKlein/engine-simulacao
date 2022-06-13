@@ -41,6 +41,22 @@ public class Scheduler {
 	public Double getTempo() {
 		return tempo;
 	}
+	
+	public void incrementChegada() {
+		this.contChegada++;
+	}
+	
+	public int getContChegada() {
+		return this.contChegada;
+	}
+	
+	public void incrementSaida() {
+		this.contSaida++;
+	}
+	
+	public int getContSaida() {
+		return this.contSaida;
+	}
 
 	private List<Process> retornarSomenteProcessos() {
 		return this.eventosAgendados.stream().filter(eventos -> eventos instanceof Process).map(e -> (Process) e).collect(Collectors.toList());

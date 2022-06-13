@@ -17,6 +17,7 @@ public class Chegada extends Event {
     @Override
     public void execute() {
         getMenorFila().insert(new GrupoCliente(getScheduler().generateId()));
+        getScheduler().incrementChegada();
     }
 
     private EntitySet getMenorFila() {
