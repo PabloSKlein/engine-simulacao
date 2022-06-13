@@ -46,6 +46,11 @@ public class AtendimentoCaixa extends Process {
 	public Double getStdDeviation() {
 		return 2.0;
 	}
+	
+	@Override
+	public Double getTimeScheduler() {
+		return this.getScheduler().getTempo();
+	}
 
 	@Override
 	protected void executeOnStart() {
