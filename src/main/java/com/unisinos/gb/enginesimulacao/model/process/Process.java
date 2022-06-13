@@ -27,7 +27,7 @@ public abstract class Process extends Event {
 	public abstract Double getStdDeviation();
 
 	public abstract Double getMean();
-	
+
 	public abstract Double getTimeScheduler();
 
 	public void setActive(boolean active) {
@@ -76,6 +76,7 @@ public abstract class Process extends Event {
 	@Override
 	public String toString() {
 		return "PROCESSO (" + this.getName() + ") -> " + (isActive() ? "ATIVO   " : "INATIVO ")
-				+ (isActive() ? "(DELAY: " + getDuration() + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")");
+				+ (isActive() ? "(DELAY: " + getDuration() + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")") + "\t\t\t(TEMPO: " + this.getTempo()
+				+ ")";
 	}
 }
