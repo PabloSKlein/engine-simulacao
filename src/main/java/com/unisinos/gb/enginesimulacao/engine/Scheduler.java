@@ -18,6 +18,7 @@ public class Scheduler {
 	public static double maxValue = 6;
 	private boolean processosLigados = true;
 
+	private Double tempoAnterior = 0.0;
 	private Double tempo = 0.0;
 	private int id = 0;
 
@@ -136,9 +137,10 @@ public class Scheduler {
 		this.contCiclos++;
 		if (!eventosAgendados.isEmpty()) {
 			// Ajustado, nunca pode pegar coisas no passado.
-			var proximoCiclo = getProximoCiclo();
+			this.tempoAnterior = this.tempo;
+			this.tempo = getProximoCiclo();
 			// Adicionano ordenação por prioridade
-			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= proximoCiclo).sorted(Comparator.comparingInt(Event::getPriority).reversed())
+			var eventosDoCiclo = eventosAgendados.stream().filter(it -> it.getTempo() <= this.tempo).sorted(Comparator.comparingInt(Event::getPriority).reversed())
 					.collect(Collectors.toList());
 			eventosDoCiclo.forEach(menorEvento -> {
 				menorEvento.execute();
@@ -148,7 +150,6 @@ public class Scheduler {
 				}
 			});
 			printLog();
-			this.tempo = proximoCiclo;
 			processosLigados = this.manterProcessos();
 		}
 	}
