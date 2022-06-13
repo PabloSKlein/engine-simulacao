@@ -15,6 +15,10 @@ public abstract class Resource {
     public boolean podeAlocarRecurso(){
        return recursosAlocados < quantity;
     }
+    
+    public boolean isAllocated() {
+    	return recursosAlocados > 0;
+    }
 
     public boolean allocate() {
         if(this.podeAlocarRecurso()){
@@ -29,6 +33,16 @@ public abstract class Resource {
             recursosAlocados --;
         }
         return true;
+    }
+    
+    public void allocateSpecific(int quant) {
+    	for(int i=0;i<quant;i++) {
+    		this.allocate();
+    	}
+    }
+    
+    public void releaseAll() {
+    	this.recursosAlocados = 0;
     }
 
     public double allocationRate() {

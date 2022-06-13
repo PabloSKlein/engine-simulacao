@@ -8,8 +8,8 @@ public class Chegada extends Event {
     private final EntitySet fila1;
     private final EntitySet fila2;
 
-    public Chegada(int eventId, EntitySet fila1, EntitySet fila2, Scheduler scheduler, double time) {
-        super(eventId, "CHEGADA" + eventId, scheduler, time);
+    public Chegada(int eventId, EntitySet fila1, EntitySet fila2, Scheduler scheduler) {
+        super(eventId, "CHEGADA" + eventId, scheduler, 0.0);
         this.fila1 = fila1;
         this.fila2 = fila2;
     }
@@ -17,6 +17,7 @@ public class Chegada extends Event {
     @Override
     public void execute() {
         getMenorFila().insert(new GrupoCliente(getScheduler().generateId()));
+        getScheduler().incrementChegada();
     }
 
     private EntitySet getMenorFila() {

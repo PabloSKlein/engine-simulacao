@@ -7,11 +7,14 @@ import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.enumeration.QueueModeEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Chegada;
+import com.unisinos.gb.enginesimulacao.model.event.Saida;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.PreparaRefeicao;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Cozinheiro;
+import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
 
 public class EngineSimulacaoApplication {
 	static final Scheduler de = new Scheduler();
@@ -33,10 +36,28 @@ public class EngineSimulacaoApplication {
 	}
 
 	public static void criaChegada(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
-		de.scheduleAt(new Chegada(de.generateId(), filaCaixa1, filaCaixa2, de, 1.0), time);
+		de.scheduleAt(new Chegada(de.generateId(), filaCaixa1, filaCaixa2, de), time);
+	}
+	
+	public static void criaSaida(double time) {
+		de.scheduleAt(new Saida(de.generateId(), de), time);
 	}
 
 	public static void main(String[] args) {
+		
+		var mesa1 = new Mesa(1, "Teste Mesa 1", 4);
+		var mesa2 = new Mesa(2, "Teste Mesa 2", 2);
+		var mesa3 = new Mesa(3, "Teste Mesa 3", 2);
+		
+		var balcao1 = new Balcao(1, 1);
+		var balcao2 = new Balcao(2, 2);
+		var balcao3 = new Balcao(3, 3);
+		var balcao4 = new Balcao(4, 4);
+		var balcao5 = new Balcao(5, 5);
+		var balcao6 = new Balcao(6, 6);
+		
+		de.addMesas(mesa1,mesa2,mesa3);
+		de.addBalcao(balcao1,balcao2,balcao3,balcao4,balcao5, balcao6);
 
 		// Inicializa as filas
 		var filaCaixa1 = new EntitySet(de.generateId(), "CAIXA 1", QueueModeEnum.FIFO, 100);

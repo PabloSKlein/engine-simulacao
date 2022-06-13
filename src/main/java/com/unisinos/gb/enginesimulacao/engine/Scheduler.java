@@ -1,6 +1,7 @@
 package com.unisinos.gb.enginesimulacao.engine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,8 @@ import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
+import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
 
 public class Scheduler {
 
@@ -29,6 +32,8 @@ public class Scheduler {
 	// Adicionado listas
 	private final List<Event> eventosAgendados = new ArrayList<>();
 	private final List<EntitySet> entitySetList = new ArrayList<>();
+	private final List<Mesa> mesasDisponiveis = new ArrayList<>();	
+	private final List<Balcao> balcaoDisponivel = new ArrayList<>();	
 
 	public void addEntitySet(EntitySet entitySet) {
 		this.entitySetList.add(entitySet);
@@ -40,6 +45,22 @@ public class Scheduler {
 
 	public Double getTempo() {
 		return tempo;
+	}
+	
+	public void incrementChegada() {
+		this.contChegada++;
+	}
+	
+	public int getContChegada() {
+		return this.contChegada;
+	}
+	
+	public void incrementSaida() {
+		this.contSaida++;
+	}
+	
+	public int getContSaida() {
+		return this.contSaida;
 	}
 
 	private List<Process> retornarSomenteProcessos() {
@@ -212,5 +233,14 @@ public class Scheduler {
 			throw new RuntimeException("Event " + eventProcess.getId() + " Nao e processo!!");
 		}
 		eventProcess.setTime(DistributionEnum.round(this.tempo + time, DistributionEnum.NUMBER_DECIMALS));
+	}
+	
+	
+	public void addMesas(Mesa...mesas) {
+		this.mesasDisponiveis.addAll(Arrays.asList(mesas));
+	}
+	
+	public void addBalcao(Balcao...balcaos) {
+		this.balcaoDisponivel.addAll(Arrays.asList(balcaos));
 	}
 }
