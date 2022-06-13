@@ -55,8 +55,8 @@ public class EngineSimulacaoApplication {
 		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2);
 
-		de.simulate();
-		// de.simulateBy(100.0);
+		 de.simulate();
+		//de.simulateBy(100.0);
 
 		System.out.println("\nFINALIZADO.");
 	}
