@@ -66,7 +66,7 @@ public enum DistributionEnum {
 
 	protected double normal(Double meanValue, Double stdDeviationValue, Double time) {
 		Random r = new Random();
-		return r.nextGaussian() * (stdDeviationValue + meanValue);
+		return r.nextGaussian() * stdDeviationValue + meanValue;
 //		return round(Math.abs((time - meanValue) / stdDeviationValue), number_decimals);
 	}
 }
