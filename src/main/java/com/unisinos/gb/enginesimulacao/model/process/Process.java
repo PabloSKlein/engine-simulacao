@@ -58,8 +58,13 @@ public abstract class Process extends Event {
 				this.getScheduler().reAgendarProcesso(this.getId(), getDuration());
 				this.renewPriority();
 			} else {
-				// Se não consegue processar aumenta a prioridade
-				this.addPriority();
+				// Verifica se é para desativar
+				if (!getScheduler().isProcessosLigados()) {
+					setRemoveEvent(true);
+				} else {
+					// Se não só aumenta prioridade.
+					this.addPriority();
+				}
 			}
 		}
 	}
@@ -68,7 +73,7 @@ public abstract class Process extends Event {
 
 	@Override
 	public String toString() {
-		return "PROCESSO (" + this.getName() + ") -> " + "ATIVO: " + isActive() + " DELAY: " + getDuration() + " DISTIBUIÇÃO: " + distributionEnum + " PRIORIDADE: "
-				+ this.getPriority() + " DESATIVADO: " + this.isRemoveEvent();
+		return "PROCESSO (" + this.getName() + ") -> " + (isActive() ? "ATIVO   " : "INATIVO ")
+				+ (isActive() ? "(DELAY: " + getDuration() + " - " + distributionEnum + ")" : "(PRIORIDADE: " + this.getPriority() + ")");
 	}
 }

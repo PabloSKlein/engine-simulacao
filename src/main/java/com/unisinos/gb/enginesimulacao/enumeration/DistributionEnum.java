@@ -45,13 +45,14 @@ public enum DistributionEnum {
 	public int getKey() {
 		return this.key;
 	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = BigDecimal.valueOf(value);
-	    bd = bd.setScale(places, RoundingMode.DOWN);
-	    return bd.doubleValue();
+	public static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		BigDecimal bd = BigDecimal.valueOf(value);
+		bd = bd.setScale(places, RoundingMode.DOWN);
+		return bd.doubleValue();
 	}
 
 	protected double uniform(Double minValue, Double maxValue) {

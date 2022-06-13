@@ -16,7 +16,7 @@ public class Scheduler {
 	public static double stdDeviationValue = 5;
 	public static double minValue = 1;
 	public static double maxValue = 6;
-	private boolean desativarProcessos = false;
+	private boolean processosLigados = true;
 
 	private Double tempo = 0.0;
 	private int id = 0;
@@ -59,6 +59,10 @@ public class Scheduler {
 	public void scheduleIn(Event event, Double timeToEvent) {
 		event.setTime(tempo + timeToEvent);
 		eventosAgendados.add(event);
+	}
+
+	public boolean isProcessosLigados() {
+		return processosLigados;
 	}
 
 	public void scheduleAt(Event event, Double absoluteTime) {
@@ -138,32 +142,26 @@ public class Scheduler {
 					.collect(Collectors.toList());
 			eventosDoCiclo.forEach(menorEvento -> {
 				menorEvento.execute();
-				// tratamento especiais de tipo processo
-				if (menorEvento instanceof Process) {
-					if (desativarProcessos) {
-						menorEvento.setRemoveEvent(true);
-					}
-				}
+				// Verifca se este evento esta condicionado a remoção.
 				if (menorEvento.isRemoveEvent()) {
 					eventosAgendados.remove(menorEvento);
 				}
 			});
 			printLog();
 			this.tempo = proximoCiclo;
-			desativarProcessos = this.deveDesligarProcessos();
+			processosLigados = this.manterProcessos();
 		}
 	}
 
-	private boolean deveDesligarProcessos() {
+	private boolean manterProcessos() {
 		// Verifica se tem eventos não processos.
 		boolean temEventosEventos = !retornarSomenteEventosEventos().isEmpty();
-		if (!temEventosEventos) {
-			// Se não tem eventos, verifica se todos os processos estão ativos (aguardando
-			// eventos)
-			boolean temProcessoAtivo = retornarSomenteProcessos().stream().anyMatch(pro -> pro.isActive());
-			return !temProcessoAtivo;
+		if (temEventosEventos) {
+			// Se tem eventos os processos seguem funcionando.
+			return true;
 		}
-		return false;
+		// Se não tem eventos, tem que verificar se algum esta ativo (processando)
+		return retornarSomenteProcessos().stream().anyMatch(pro -> pro.isActive());
 	}
 
 	public void simulateBy(Double duration) {
