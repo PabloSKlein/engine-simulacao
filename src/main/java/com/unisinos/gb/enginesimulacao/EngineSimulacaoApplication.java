@@ -49,14 +49,14 @@ public class EngineSimulacaoApplication {
 
 		// Processos
 		var atendimentoCaixa1 = new AtendimentoCaixa(de.generateId(), de, filaCaixa1, filaPedido, filaBalcao, filaMesas, recursoCaixa1);
-		var atendimentoCaixa2 = new AtendimentoCaixa(de.generateId(), de, filaCaixa1, filaPedido, filaBalcao, filaMesas, recursoCaixa2);
+		var atendimentoCaixa2 = new AtendimentoCaixa(de.generateId(), de, filaCaixa2, filaPedido, filaBalcao, filaMesas, recursoCaixa2);
 
 		// Cria os eventos de entrada
 		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2);
 
-		 de.simulate();
-		//de.simulateBy(100.0);
+		de.simulate();
+		// de.simulateBy(100.0);
 
 		System.out.println("\nFINALIZADO.");
 	}
