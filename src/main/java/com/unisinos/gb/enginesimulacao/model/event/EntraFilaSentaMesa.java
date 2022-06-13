@@ -1,21 +1,20 @@
-package com.unisinos.gb.enginesimulacao.model.process;
+package com.unisinos.gb.enginesimulacao.model.event;
 
-import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
-import com.unisinos.gb.enginesimulacao.model.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.Scheduler;
+import com.unisinos.gb.enginesimulacao.engine.Scheduler;
+import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
 import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
 
-public class SentaMesa extends Process {
+public class EntraFilaSentaMesa extends Event {
 
-    Mesa[] mesas;
-    EntitySet filaMesa;
-    GrupoCliente grupo;
-    EntitySet filaSaida;
+    private final Mesa[] mesas;
+    private final EntitySet filaMesa;
+    private final EntitySet filaSaida;
+    private final GrupoCliente grupo;
 
-    public SentaMesa(Integer id, String name, Scheduler scheduler, double time, boolean active,
-            DistributionEnum enumDuration, Mesa[] mesas, EntitySet filaMesa, EntitySet filaSaida, GrupoCliente grupo) {
-        super(id, name, scheduler, time, active, enumDuration);
+    protected EntraFilaSentaMesa(Integer id, String name, Scheduler scheduler, double time, Mesa[] mesas,
+            EntitySet filaMesa, EntitySet filaSaida, GrupoCliente grupo) {
+        super(id, name, scheduler, time);
         this.mesas = mesas;
         this.filaMesa = filaMesa;
         this.filaSaida = filaSaida;
@@ -23,21 +22,9 @@ public class SentaMesa extends Process {
     }
 
     @Override
-    public void executeOnStart() {
-        // TODO Auto-generated method stub
+    public void execute() {
+        temMesa();
 
-    }
-
-    @Override
-    public void executeOnEnd() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean deveProcessar() {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     private void temMesa() {
