@@ -76,12 +76,8 @@ public class Scheduler {
 		System.out.println("=============== CICLO " + this.contCiclos + " ======== TEMPO " + this.tempo + " =========================");
 		// Filas
 		StringBuilder stb = new StringBuilder();
-		this.entitySetList.forEach(lista -> {
-			stb.append(lista.getName() + " -> \t");
-			lista.getEntityList().forEach(es -> {
-				stb.append("|");
-			});
-			stb.append(" (" + lista.getEntityList().size() + ") ");
+		this.entitySetList.forEach(fila -> {
+			stb.append(fila);
 			stb.append("\n");
 		});
 		stb.append("\n");
