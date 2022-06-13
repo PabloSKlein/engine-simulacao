@@ -6,7 +6,7 @@ import com.unisinos.gb.enginesimulacao.engine.Scheduler;
 import com.unisinos.gb.enginesimulacao.enumeration.DistributionEnum;
 import com.unisinos.gb.enginesimulacao.model.entity.Entity;
 import com.unisinos.gb.enginesimulacao.model.entity.EntitySet;
-import com.unisinos.gb.enginesimulacao.model.entity.Pedido;
+import com.unisinos.gb.enginesimulacao.model.entity.GrupoCliente;
 import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class SentarMesaBalcao extends Process {
@@ -41,24 +41,28 @@ public class SentarMesaBalcao extends Process {
 		return null;
 	}
 
+	private boolean check() {
+		return this.lugares.stream().anyMatch(l -> !l.allocate());
+	}
+
 	@Override
 	protected void executeOnStart() {
 		// cozinheiro.allocate();
 		this.entity = fila.remove();
-		Pedido pedido = (Pedido) this.entity;
+		GrupoCliente clientes = (GrupoCliente) this.entity;
 		// Se tem lugar disponivel
+		Resource lug = this.lugares.stream().filter(l -> !l.allocate()).findAny().orElse(null);
+		lug.allocateSpecific(clientes.getQuantidade());
 	}
 
 	@Override
 	protected void executeOnEnd() {
-		Pedido pedido = (Pedido) this.entity;
-		filaPreparados.insert(pedido);
-		cozinheiro.release();
+
 	}
 
 	@Override
 	public boolean deveProcessar() {
-		return !fila.isEmpty();
+		return !fila.isEmpty() && check();
 	}
 
 }

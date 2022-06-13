@@ -12,6 +12,7 @@ import com.unisinos.gb.enginesimulacao.model.event.Event;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
 import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Mesa;
+import com.unisinos.gb.enginesimulacao.model.resources.Resource;
 
 public class Scheduler {
 
@@ -32,8 +33,16 @@ public class Scheduler {
 	// Adicionado listas
 	private final List<Event> eventosAgendados = new ArrayList<>();
 	private final List<EntitySet> entitySetList = new ArrayList<>();
-	private final List<Mesa> mesasDisponiveis = new ArrayList<>();	
-	private final List<Balcao> balcaoDisponivel = new ArrayList<>();	
+	private final List<Resource> mesasDisponiveis = new ArrayList<>();
+	private final List<Resource> balcaoDisponivel = new ArrayList<>();
+
+	public List<Resource> getMesasDisponiveis() {
+		return mesasDisponiveis;
+	}
+
+	public List<Resource> getBalcaoDisponivel() {
+		return balcaoDisponivel;
+	}
 
 	public void addEntitySet(EntitySet entitySet) {
 		this.entitySetList.add(entitySet);
@@ -46,19 +55,19 @@ public class Scheduler {
 	public Double getTempo() {
 		return tempo;
 	}
-	
+
 	public void incrementChegada() {
 		this.contChegada++;
 	}
-	
+
 	public int getContChegada() {
 		return this.contChegada;
 	}
-	
+
 	public void incrementSaida() {
 		this.contSaida++;
 	}
-	
+
 	public int getContSaida() {
 		return this.contSaida;
 	}
@@ -234,13 +243,12 @@ public class Scheduler {
 		}
 		eventProcess.setTime(DistributionEnum.round(this.tempo + time, DistributionEnum.NUMBER_DECIMALS));
 	}
-	
-	
-	public void addMesas(Mesa...mesas) {
+
+	public void addMesas(Mesa... mesas) {
 		this.mesasDisponiveis.addAll(Arrays.asList(mesas));
 	}
-	
-	public void addBalcao(Balcao...balcaos) {
+
+	public void addBalcao(Balcao... balcaos) {
 		this.balcaoDisponivel.addAll(Arrays.asList(balcaos));
 	}
 }

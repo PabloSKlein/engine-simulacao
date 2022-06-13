@@ -11,6 +11,7 @@ import com.unisinos.gb.enginesimulacao.model.event.Saida;
 import com.unisinos.gb.enginesimulacao.model.process.AtendimentoCaixa;
 import com.unisinos.gb.enginesimulacao.model.process.PreparaRefeicao;
 import com.unisinos.gb.enginesimulacao.model.process.Process;
+import com.unisinos.gb.enginesimulacao.model.process.SentarMesaBalcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Balcao;
 import com.unisinos.gb.enginesimulacao.model.resources.Caixa;
 import com.unisinos.gb.enginesimulacao.model.resources.Cozinheiro;
@@ -38,26 +39,26 @@ public class EngineSimulacaoApplication {
 	public static void criaChegada(double time, EntitySet filaCaixa1, EntitySet filaCaixa2) {
 		de.scheduleAt(new Chegada(de.generateId(), filaCaixa1, filaCaixa2, de), time);
 	}
-	
+
 	public static void criaSaida(double time) {
 		de.scheduleAt(new Saida(de.generateId(), de), time);
 	}
 
 	public static void main(String[] args) {
-		
+
 		var mesa1 = new Mesa(1, "Teste Mesa 1", 4);
 		var mesa2 = new Mesa(2, "Teste Mesa 2", 2);
 		var mesa3 = new Mesa(3, "Teste Mesa 3", 2);
-		
+
 		var balcao1 = new Balcao(1, 1);
 		var balcao2 = new Balcao(2, 2);
 		var balcao3 = new Balcao(3, 3);
 		var balcao4 = new Balcao(4, 4);
 		var balcao5 = new Balcao(5, 5);
 		var balcao6 = new Balcao(6, 6);
-		
-		de.addMesas(mesa1,mesa2,mesa3);
-		de.addBalcao(balcao1,balcao2,balcao3,balcao4,balcao5, balcao6);
+
+		de.addMesas(mesa1, mesa2, mesa3);
+		de.addBalcao(balcao1, balcao2, balcao3, balcao4, balcao5, balcao6);
 
 		// Inicializa as filas
 		var filaCaixa1 = new EntitySet(de.generateId(), "CAIXA 1", QueueModeEnum.FIFO, 100);
@@ -79,10 +80,12 @@ public class EngineSimulacaoApplication {
 		var prepararComida1 = new PreparaRefeicao(de.generateId(), de, filaPedido, filaPedidosPreparados, cozinheiros);
 		var prepararComida2 = new PreparaRefeicao(de.generateId(), de, filaPedido, filaPedidosPreparados, cozinheiros);
 		var prepararComida3 = new PreparaRefeicao(de.generateId(), de, filaPedido, filaPedidosPreparados, cozinheiros);
+		var sentarMesa = new SentarMesaBalcao(de.generateId(), de, filaMesas, de.getMesasDisponiveis());
+		var sentarBalcao = new SentarMesaBalcao(de.generateId(), de, filaBalcao, de.getBalcaoDisponivel());
 
 		// Cria os eventos de entrada
 		criaChegadaPeloTempo(60, filaCaixa1, filaCaixa2);
-		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2, prepararComida1, prepararComida2, prepararComida3);
+		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2, sentarMesa, sentarBalcao, prepararComida1, prepararComida2, prepararComida3);
 
 		de.simulate();
 		// de.simulateBy(100.0);
