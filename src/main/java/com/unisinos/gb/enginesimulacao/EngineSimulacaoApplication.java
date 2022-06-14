@@ -62,17 +62,17 @@ public class EngineSimulacaoApplication {
 
 	public static void main(String[] args) {
 
-		var mesa1 = new Mesa(1, "Teste Mesa 1", 4);
-		var mesa2 = new Mesa(2, "Teste Mesa 2", 2);
-		var mesa3 = new Mesa(3, "Teste Mesa 3", 2);
-		var mesa4 = new Mesa(1, "Teste Mesa 4", 4);
+		var mesa1 = new Mesa(de.generateId(), "Teste Mesa 1", 4);
+		var mesa2 = new Mesa(de.generateId(), "Teste Mesa 2", 2);
+		var mesa3 = new Mesa(de.generateId(), "Teste Mesa 3", 2);
+		var mesa4 = new Mesa(de.generateId(), "Teste Mesa 4", 4);
 
-		var balcao1 = new Balcao(1, 1);
-		var balcao2 = new Balcao(2, 2);
-		var balcao3 = new Balcao(3, 3);
-		var balcao4 = new Balcao(4, 4);
-		var balcao5 = new Balcao(5, 5);
-		var balcao6 = new Balcao(6, 6);
+		var balcao1 = new Balcao(de.generateId(), 1);
+		var balcao2 = new Balcao(de.generateId(), 1);
+		var balcao3 = new Balcao(de.generateId(), 1);
+		var balcao4 = new Balcao(de.generateId(), 1);
+		var balcao5 = new Balcao(de.generateId(), 1);
+		var balcao6 = new Balcao(de.generateId(), 1);
 
 		de.addMesas(mesa1, mesa2, mesa3, mesa4);
 		de.addBalcao(balcao1, balcao2, balcao3, balcao4, balcao5, balcao6);
@@ -123,8 +123,8 @@ public class EngineSimulacaoApplication {
 		});
 
 		de.simulate();
-		//de.simulateBy(100.0);
-		//de.simulateUntil(100.0);
+		// de.simulateBy(100.0);
+		// de.simulateUntil(100.0);
 		System.out.println("=".repeat(100));
 		System.out.println("=".repeat(100));
 		System.out.println("=".repeat(100));

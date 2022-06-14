@@ -18,7 +18,7 @@ public enum DistributionEnum {
 			if (minValue == null || maxValue == null) {
 				throw new RuntimeException("min e max Obrigatórios");
 			}
-			return this.uniform(minValue, maxValue);
+			return this.uniform(minValue, maxValue); 
 		}
 	},
 	NORMAL(2) {
