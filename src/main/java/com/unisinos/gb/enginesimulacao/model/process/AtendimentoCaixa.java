@@ -39,7 +39,7 @@ public class AtendimentoCaixa extends Process {
 
 	@Override
 	public Double getMean() {
-		return 8.0;
+		return 3.0;
 	}
 
 	@Override

@@ -66,6 +66,10 @@ public class EngineSimulacaoApplication {
 		var mesa2 = new Mesa(de.generateId(), "Teste Mesa 2", 2);
 		var mesa3 = new Mesa(de.generateId(), "Teste Mesa 3", 2);
 		var mesa4 = new Mesa(de.generateId(), "Teste Mesa 4", 4);
+		var mesa5 = new Mesa(de.generateId(), "Teste Mesa 5", 4);
+		var mesa6 = new Mesa(de.generateId(), "Teste Mesa 6", 4);
+		var mesa7 = new Mesa(de.generateId(), "Teste Mesa 7", 4);
+		var mesa8 = new Mesa(de.generateId(), "Teste Mesa 8", 2);
 
 		var balcao1 = new Balcao(de.generateId(), 1);
 		var balcao2 = new Balcao(de.generateId(), 1);
@@ -74,12 +78,12 @@ public class EngineSimulacaoApplication {
 		var balcao5 = new Balcao(de.generateId(), 1);
 		var balcao6 = new Balcao(de.generateId(), 1);
 
-		de.addMesas(mesa1, mesa2, mesa3, mesa4);
+		de.addMesas(mesa1, mesa2, mesa3, mesa4, mesa5, mesa6, mesa7, mesa8);
 		de.addBalcao(balcao1, balcao2, balcao3, balcao4, balcao5, balcao6);
 
 		// Inicializa as filas
-		var filaCaixa1 = new EntitySet(de.generateId(), "CAIXA 1 ", QueueModeEnum.FIFO, 100, de);
-		var filaCaixa2 = new EntitySet(de.generateId(), "CAIXA 2 ", QueueModeEnum.FIFO, 100, de);
+		var filaCaixa1 = new EntitySet(de.generateId(), "CAIXA 1 ", QueueModeEnum.FIFO, 200, de);
+		var filaCaixa2 = new EntitySet(de.generateId(), "CAIXA 2 ", QueueModeEnum.FIFO, 200, de);
 		var filaPedido = new EntitySet(de.generateId(), "PEDIDOS ", QueueModeEnum.FIFO, 100, de);
 		var filaPedidosPreparados = new EntitySet(de.generateId(), "PRONTOS ", QueueModeEnum.FIFO, 100, de);
 		var filaBalcao = new EntitySet(de.generateId(), "BALCÃO  ", QueueModeEnum.FIFO, 100, de);
@@ -104,9 +108,9 @@ public class EngineSimulacaoApplication {
 		var usarBanheiroCaixa2 = new UsarBanheiro(de.generateId(), de, filaBanheiro, recursoCaixa2);
 
 		// Cria os eventos de entrada
-		criaChegadaPeloTempo(180, filaCaixa1, filaCaixa2);
+		criaChegadaPeloTempo(750, filaCaixa1, filaCaixa2);
 		// Cria os eventos de ir ao banheiro
-		criaIdaAoBanheiroPeloTempo(180, filaBanheiro);
+		criaIdaAoBanheiroPeloTempo(250, filaBanheiro);
 
 		criaProcessosNoTempoZero(atendimentoCaixa1, atendimentoCaixa2, sentarMesa, sentarBalcao, prepararComida1, prepararComida2, prepararComida3, usarBanheiroCaixa1,
 				usarBanheiroCaixa2);
@@ -122,8 +126,8 @@ public class EngineSimulacaoApplication {
 			criaProcessosNoTempoZero(refeicaoBalcao);
 		});
 
-		de.simulate();
-		// de.simulateBy(100.0);
+		// de.simulate();
+		de.simulateBy(180.0);
 		// de.simulateUntil(100.0);
 		System.out.println("=".repeat(100));
 		System.out.println("=".repeat(100));
